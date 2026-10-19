@@ -1,0 +1,9 @@
+<div class="row">
+{% if new %}<div><label>Short name (e.g. films)</label><input name="name" pattern="[a-z0-9]{1,20}" title="lower-case letters and numbers" required></div>{% endif %}
+<div><label>IP address of the other device</label><input name="host" value="{{ s.host if s }}" placeholder="192.168.1.60" required></div>
+<div><label>Share name (capitals matter)</label><input name="share" value="{{ s.share if s }}" placeholder="Media" required></div>
+<div><label>Folder inside it (optional)</label><input name="sub" value="{{ s.sub if s }}" placeholder="Movies"></div>
+<div><label>Username</label><input name="user" value="{{ s.user if s }}" autocomplete="off" required></div>
+<div><label>Password{% if s %} (blank = keep){% endif %}</label><input type="password" name="pass" autocomplete="new-password" {{ '' if s else 'required' }}></div>
+<div><label>SMB version</label><select name="vers">{% for v in versions %}<option {{ 'selected' if s and s.vers==v }}>{{ v }}</option>{% endfor %}</select></div>
+</div>

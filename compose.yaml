@@ -1,0 +1,26 @@
+# =====================================================================
+#  NAS Control Panel  -  http://<your-NAS-IP>:8090
+#  1. Edit the four lines marked  <-- CHANGE  below
+#  2. docker compose up -d     (or paste into your NAS's Docker "Project")
+#  3. First login: get the setup code with   docker logs nas-panel
+# =====================================================================
+services:
+  nas-panel:
+    image: ghcr.io/ibiddle/nas-panel:latest
+    container_name: nas-panel
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    environment:
+      TZ: Europe/London            # <-- CHANGE: your time zone
+      PUID: "1000"                 # <-- CHANGE: your NAS user's ID   (run: id <username>)
+      PGID: "1000"                 # <-- CHANGE: your NAS user's group (UGREEN admin = 10, Synology users = 100)
+      APPS_DIRS: /volume1/docker   # <-- CHANGE: folder holding your docker compose apps (comma-separate several)
+      # NAS_UI_URL: http://192.168.1.10:9999   # optional: link to your NAS admin page
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /volume1/docker:/volume1/docker      # <-- must match APPS_DIRS, SAME path on both sides
+      - ./data:/data
+      - /proc/1/mounts:/host/mounts:ro       # optional: lets the panel list the NAS's own mounts

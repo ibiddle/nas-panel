@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}NAS Control Panel{% endblock %}</title>
+<link rel="icon" href="{{ url_for('static', filename='icon.svg') }}"><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body>{% block body %}<div class="wrap">
+<nav><div class="brand"><img src="{{ url_for('static', filename='icon.svg') }}" width="24" alt="">NAS Panel</div>
+<a href="{{ url_for('home') }}" class="{{ 'on' if request.endpoint=='home' }}">🏠 Home</a>
+{% for t in TOOLS %}<a href="{{ url_for(t.endpoint) }}" class="{{ 'on' if request.blueprint==t.id }}">{{ t.icon }} {{ t.name }}</a>{% endfor %}
+<div class="sep"></div>
+<a href="{{ url_for('activity') }}" class="{{ 'on' if request.endpoint=='activity' }}">📝 Activity log</a>
+<a href="{{ url_for('password') }}" class="{{ 'on' if request.endpoint=='password' }}">🔑 Change password</a>
+<form method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf" value="{{ csrf }}"><button>↩ Log out</button></form>
+</nav>
+<main>{% include "_flash.html" %}{% block main %}{% endblock %}</main></div>{% endblock %}
+<script>
+document.addEventListener('submit',e=>{const f=e.target;if(f.dataset.confirm&&!confirm(f.dataset.confirm)){e.preventDefault();return}
+const b=f.querySelector('button[type=submit],button:not([type])');if(b){setTimeout(()=>{b.disabled=true;b.dataset.t=b.textContent;b.textContent=f.dataset.busy||'Working…'},0)}});
+</script></body></html>

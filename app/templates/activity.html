@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block main %}<h1>Activity log</h1><p class="sub">Every change and login attempt, newest first.</p>
+<div class="card">{% if log %}<pre class="log">{{ log|join('\n') }}</pre>{% else %}<p class="mute">Nothing yet.</p>{% endif %}</div>{% endblock %}

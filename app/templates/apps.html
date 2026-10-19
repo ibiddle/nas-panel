@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block main %}<h1>📦 Apps</h1><p class="sub">Docker apps on the NAS (view only).</p>
+<div class="card tablewrap"><table><tr><th>Name</th><th>State</th><th>Status</th><th>Image</th><th>Ports</th></tr>
+{% for r in rows %}<tr><td><b>{{ r.name }}</b></td><td><span class="pill {{ 'run' if r.state=='running' else 'stop' }}">{{ r.state }}</span></td><td class="small">{{ r.status }}</td><td class="small mute">{{ r.image }}</td><td class="small mute">{{ r.ports or '—' }}</td></tr>{% endfor %}
+</table></div>{% endblock %}

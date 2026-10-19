@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block main %}<h1>NAS Control Panel</h1><p class="sub">Simple controls for the UGREEN NAS.</p>
+<div class="grid">{% for t in TOOLS %}<a class="tile" href="{{ url_for(t.endpoint) }}"><div class="i">{{ t.icon }}</div><b>{{ t.name }}</b><span>{{ t.desc }}</span></a>{% endfor %}</div>
+<div class="card" style="margin-top:18px"><h2>Recent activity</h2>{% if log %}<pre class="log">{{ log|join('\n') }}</pre>{% else %}<p class="mute">Nothing yet.</p>{% endif %}
+<p class="small"><a href="{{ url_for('activity') }}">Full log →</a></p></div>{% endblock %}

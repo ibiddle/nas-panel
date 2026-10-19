@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block body %}<div class="center"><div class="card">
+<h1>Set up NAS Panel</h1><p class="sub">Create the password for this panel.</p>{% include "_flash.html" %}
+<form method="post"><label>Setup code (from the container log)</label><input name="code" autocomplete="off" required>
+<label>New password (8+ characters)</label><input type="password" name="pw" autocomplete="new-password" required>
+<label>Repeat password</label><input type="password" name="pw2" autocomplete="new-password" required>
+<p><button>Create password</button></p></form></div></div>{% endblock %}

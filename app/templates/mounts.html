@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% block main %}<h1>🗄️ NAS Shares</h1>
+<p class="sub">Shares mounted on the NAS itself, so you can browse them in the NAS's own file manager.</p>
+<div class="card"><h2>Currently mounted on the NAS</h2>
+{% if not mounts_ok %}<p class="mute">Not available — add <code>/proc/1/mounts:/host/mounts:ro</code> to the panel's volumes to see this.</p>
+{% elif mounts %}<div class="tablewrap"><table><tr><th>From</th><th>Mounted at</th><th>Type</th></tr>
+{% for m in mounts %}<tr><td><code>{{ m.source }}</code></td><td><code>{{ m.path }}</code></td><td>{{ m.type }}</td></tr>{% endfor %}</table></div>
+{% else %}<p class="mute">None yet.</p>{% endif %}</div>
+
+<div class="card"><h2>1. Test a share first</h2><p class="small mute">Checks the IP, login and SMB version work before you set it up on the NAS. Nothing is saved.</p>
+<form method="post" action="{{ url_for('.test') }}" data-busy="Testing…"><input type="hidden" name="csrf" value="{{ csrf }}">
+{% with s=None, new=False %}{% include "_shareform.html" %}{% endwith %}<p><button>Test</button></p></form></div>
+
+<div class="card"><h2>2. Mount it with your NAS's own tool</h2>
+<p class="small mute">Mounting for the whole NAS needs system (root) access, so it's done with the NAS's built-in remote-mount feature rather than giving this panel root.</p>
+{% if nas_ui %}<p><a class="btn" href="{{ nas_ui }}" target="_blank" rel="noopener">Open NAS admin page</a></p>{% endif %}
+<table><tr><th>NAS</th><th>Where to find it</th></tr>
+<tr><td>UGREEN (UGOS Pro)</td><td>File Manager → <b>Remote mount</b> → SMB</td></tr>
+<tr><td>Synology (DSM)</td><td>File Station → Tools → <b>Mount Remote Folder</b> → CIFS</td></tr>
+<tr><td>QNAP (QTS)</td><td><b>HybridMount</b> (or File Station → Remote Mount)</td></tr>
+<tr><td>TrueNAS / Unraid</td><td>Unraid: <b>Unassigned Devices</b> plugin → Add Remote SMB Share. TrueNAS: not built in.</td></tr></table>
+<p class="small mute">Use the same IP, share, username and password you tested above, and tick auto-mount at startup if offered. Apps don't use these mounts — use <a href="{{ url_for('shares.index') }}">Network Shares</a> for apps, so they still work if the NAS mount is slow after a reboot.</p></div>
+{% endblock %}
