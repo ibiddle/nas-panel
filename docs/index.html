@@ -205,6 +205,7 @@ dialog button{font:inherit;padding:8px 18px;border-radius:8px;border:0;cursor:po
     <div class="part-num" aria-hidden="true">1</div>
     <h2>Log in and find your NAS's address</h2>
     <p class="why">You'll type this address in Part 8 to open the panel.</p>
+    <div class="note"><b>Tip:</b> keep this guide open in its own browser tab the whole time. You'll switch between this guide and your NAS by clicking the tabs at the top of your browser.</div>
     <ol class="steps">
       <li>Open your web browser (Chrome, Edge, Firefox or Safari) and log in to your NAS the way you normally do. You'll see the UGOS desktop, with icons down the left-hand side.
         <div class="note">Only ever used the <b>UGREEN app</b> on your PC? The desktop inside it is the same, so follow along in there.</div></li>
@@ -237,10 +238,14 @@ dialog button{font:inherit;padding:8px 18px;border-radius:8px;border:0;cursor:po
   </section>
 
   <!-- PART 3 -->
-  <section class="part" id="p3" data-part="3" data-title="Copy the settings">
+  <section class="part" id="p3" data-part="3" data-title="Copy the settings from this page">
     <div class="part-num" aria-hidden="true">3</div>
-    <h2>Copy the settings</h2>
-    <p class="why">Click the button. That's all there is to this part.</p>
+    <h2>Copy the settings from this page</h2>
+    <p class="why">The button is <b>right here on this guide page</b>, just below. It is <b>not</b> in Docker or on your NAS.</p>
+    <ol class="steps">
+      <li>Stay on this guide page and click the big blue <span class="ui">Copy settings</span> button below. It turns green when it's done.</li>
+      <li>Then click your <b>NAS's tab</b> at the very top of your browser to go back to it.</li>
+    </ol>
     <div class="copy-zone">
       <button class="copy-btn" id="copy" type="button">Copy settings</button>
       <p class="copy-msg" id="copy-msg" aria-live="polite">Click it once. It turns green when the settings are copied.</p>
@@ -252,8 +257,7 @@ dialog button{font:inherit;padding:8px 18px;border-radius:8px;border:0;cursor:po
         <li>Press <kbd>Ctrl</kbd> + <kbd>A</kbd> to select it all, then <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy.</li>
       </ol>
     </details>
-    <p>Now go back to your NAS's browser tab: click its tab at the very top of your browser.</p>
-    <button class="done-btn" type="button"><span class="box"></span>I've done Part 3</button>
+        <button class="done-btn" type="button"><span class="box"></span>I've done Part 3</button>
   </section>
 
   <!-- PART 4 -->
@@ -275,7 +279,7 @@ dialog button{font:inherit;padding:8px 18px;border-radius:8px;border:0;cursor:po
           <li>Click the small <span class="ui">▸</span> arrow next to <span class="ui">docker</span>, click your new <span class="ui">nas-panel</span> folder, then <span class="ui">Confirm</span> at the bottom.</li>
         </ol>
         The <span class="ui">Storage path</span> box now says something like <code>Shared folder/docker/nas-panel</code>.</li>
-      <li>Click once inside the big empty box under <span class="ui">Compose configuration</span>, then press <kbd>Ctrl</kbd> + <kbd>V</kbd>. About 40 lines of text appear.
+      <li>Click once inside the big empty box under <span class="ui">Compose configuration</span>, then press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste the settings you copied in Part 3. About 40 lines of text appear. <i>Nothing appears?</i> Go back to the guide tab, click <span class="ui">Copy settings</span> again, then come back and paste.
         <figure><button type="button" data-zoom><img src="img/ugos-2-create.png" alt="Create project form: name (1), storage path (2) and pasted settings (3)" loading="lazy"></button></figure></li>
     </ol>
     <button class="done-btn" type="button"><span class="box"></span>I've done Part 4</button>
