@@ -33,7 +33,8 @@ update(){
   compose up -d --no-deps "$SVC" >/dev/null 2>&1
   new=$(docker inspect -f '{{.Image}}' "$(compose ps -q "$SVC" | head -1)" 2>/dev/null)
   if [ "$old" = "$new" ]; then log "Already up to date."; return 0; fi
-  log "Panel updated: ${old#sha256:} -> ${new#sha256:}" | cut -c1-120
+  o=${old#sha256:}; n=${new#sha256:}
+  log "Panel updated: $(echo "$o" | cut -c1-12) -> $(echo "$n" | cut -c1-12)"
   # Restart this updater on the new image from a short-lived helper (it can't recreate itself).
   img=$(docker inspect -f '{{.Config.Image}}' "$me")
   docker run -d --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$WD:$WD:ro" -w "$WD" \
