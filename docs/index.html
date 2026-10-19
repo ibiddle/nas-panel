@@ -487,7 +487,7 @@ dialog button{font:inherit;padding:8px 18px;border-radius:8px;border:0;cursor:po
     .catch(function(){pre.textContent='Couldn\'t load the settings. Open https://github.com/ibiddle/nas-panel/blob/main/compose.yaml and copy them from there.'});
   btn.addEventListener('click',function(){
     if(!text){msg.textContent='Still loading. Wait a second and click again.';return}
-    var ok=function(){btn.textContent='Copied ✓';btn.classList.add('ok');msg.innerHTML='<b>Copied.</b> Nothing else to do here. You'll paste it in Part 4.'};
+    var ok=function(){btn.textContent='Copied ✓';btn.classList.add('ok');msg.innerHTML='<b>Copied.</b> Nothing else to do here. You\'ll paste it in Part 4.'};
     if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(ok,fallback)}else{fallback()}
     function fallback(){
       var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
