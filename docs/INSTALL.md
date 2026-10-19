@@ -1,3 +1,5 @@
+> **Easier to read:** this guide is also a proper web page with big text, tick boxes and a copy button: **https://ibiddle.github.io/nas-panel/**
+
 # Install guide for complete beginners
 
 This guide assumes you have **never** used Linux, Docker, GitHub or a command line. Every click is written down. You will **not** need to:

@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install NAS Control Panel — step-by-step guide</title>
+<meta name="description" content="Step-by-step guide to installing NAS Control Panel on a UGREEN NAS. No experience needed.">
+<link rel="icon" href="img/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Atkinson+Hyperlegible+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f5f7fa; --sheet:#ffffff; --ink:#17202e; --soft:#4d5a6d; --rule:#d8dee8;
+  --blue:#1f5fd6; --blue-ink:#ffffff; --blue-wash:#e8f0fd;
+  --done:#1a7f37; --done-wash:#e6f4ea;
+  --warn:#7a4b00; --warn-wash:#fff4d6; --warn-edge:#f0c049;
+  --key:#ffffff; --key-edge:#b9c2d0;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10151d; --sheet:#171e29; --ink:#e7ecf3; --soft:#a6b1c2; --rule:#2c3646;
+    --blue:#6ea0ff; --blue-ink:#0b1220; --blue-wash:#1b2a45;
+    --done:#5fd17f; --done-wash:#16301f;
+    --warn:#ffd37a; --warn-wash:#2e2512; --warn-edge:#8a6a1e;
+    --key:#222b38; --key-edge:#47546a;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font:19px/1.6 "Atkinson Hyperlegible",system-ui,sans-serif}
+a{color:var(--blue)}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:6px}
+img{max-width:100%;height:auto}
+
+/* ---------- top progress bar ---------- */
+.bar{position:sticky;top:0;z-index:10;background:var(--sheet);border-bottom:1px solid var(--rule)}
+.bar-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.bar-title{font-weight:700;margin-right:auto;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.bar-title img{width:28px;height:28px}
+.dots{display:flex;gap:6px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.dots a{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:2px solid var(--rule);color:var(--soft);text-decoration:none;font-weight:700;font-size:15px;background:var(--sheet)}
+.dots a:hover{border-color:var(--blue);color:var(--blue)}
+.dots a.is-done{background:var(--done);border-color:var(--done);color:#fff}
+.bar-count{font-size:15px;color:var(--soft);white-space:nowrap}
+
+/* ---------- page ---------- */
+.page{max-width:1080px;margin:0 auto;padding:0 16px 80px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:48px}
+.toc{position:sticky;top:76px;align-self:start;padding-top:40px;font-size:16px}
+.toc ol{list-style:none;margin:0;padding:0}
+.toc li{margin:0 0 4px}
+.toc a{display:flex;gap:10px;align-items:baseline;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--soft)}
+.toc a:hover{background:var(--blue-wash);color:var(--ink)}
+.toc .n{font-weight:700;min-width:1.2em;color:var(--blue)}
+.toc .is-done .n{color:var(--done)}
+.toc .extra{margin-top:16px;padding-top:16px;border-top:1px solid var(--rule)}
+main{min-width:0;padding-top:40px;max-width:720px}
+
+h1{font-size:2.6rem;line-height:1.1;margin:0 0 .4em;letter-spacing:-.01em}
+.lede{font-size:1.2rem;color:var(--soft);margin:0 0 1.2em}
+.promise{list-style:none;margin:0 0 28px;padding:0;display:grid;gap:8px}
+.promise li{display:flex;gap:12px;align-items:baseline}
+.promise li::before{content:"✓";font-weight:700;color:var(--done)}
+.facts{display:flex;flex-wrap:wrap;gap:10px 24px;font-size:17px;color:var(--soft);margin:0 0 40px;padding:16px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.facts b{color:var(--ink)}
+
+/* ---------- parts: a numbered rail ---------- */
+.part{position:relative;padding:0 0 56px 76px}
+.part::before{content:"";position:absolute;left:23px;top:56px;bottom:0;width:2px;background:var(--rule)}
+.part:last-of-type::before{display:none}
+.part-num{position:absolute;left:0;top:0;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:22px;font-weight:700;background:var(--blue);color:var(--blue-ink)}
+.part.is-done .part-num{background:var(--done);color:#fff}
+.part.is-done .part-num::after{content:"✓";position:absolute;right:-4px;bottom:-4px;width:20px;height:20px;border-radius:50%;background:var(--sheet);color:var(--done);font-size:13px;display:grid;place-items:center;border:2px solid var(--done)}
+.part h2{font-size:1.75rem;line-height:1.2;margin:4px 0 .5em}
+.part .why{color:var(--soft);margin:-.2em 0 1em}
+h3{font-size:1.2rem;margin:1.6em 0 .4em}
+
+.steps{counter-reset:s;list-style:none;margin:0 0 1em;padding:0}
+.steps>li{counter-increment:s;position:relative;padding:0 0 0 44px;margin:0 0 18px}
+.steps>li::before{content:counter(s);position:absolute;left:0;top:1px;width:30px;height:30px;border-radius:8px;background:var(--blue-wash);color:var(--blue);font-weight:700;font-size:16px;display:grid;place-items:center}
+.steps .steps>li::before{background:transparent;border:2px solid var(--rule);color:var(--soft)}
+
+/* things you type, keys, on-screen labels */
+kbd{font:500 .85em "Atkinson Hyperlegible Mono",ui-monospace,monospace;background:var(--key);border:1px solid var(--key-edge);border-bottom-width:3px;border-radius:6px;padding:1px 7px;white-space:nowrap}
+.type{font:500 .9em "Atkinson Hyperlegible Mono",ui-monospace,monospace;background:var(--blue-wash);color:var(--ink);padding:2px 8px;border-radius:6px;white-space:nowrap}
+.ui{font-weight:700}
+code{font:500 .88em "Atkinson Hyperlegible Mono",ui-monospace,monospace;background:var(--blue-wash);padding:1px 6px;border-radius:5px}
+
+/* pictures */
+figure{margin:14px 0 22px}
+figure button{all:unset;cursor:zoom-in;display:block;border-radius:10px}
+figure img{display:block;border:1px solid var(--rule);border-radius:10px;background:#fff}
+figcaption{font-size:15px;color:var(--soft);margin-top:6px}
+
+/* notes */
+.note,.stop{border-radius:10px;padding:14px 18px;margin:16px 0;font-size:17px}
+.note{background:var(--blue-wash)}
+.stop{background:var(--warn-wash);color:var(--warn);border-left:5px solid var(--warn-edge)}
+.stop b,.note b{color:inherit}
+
+/* done toggle */
+.done-btn{display:inline-flex;align-items:center;gap:10px;margin-top:6px;font:inherit;font-size:17px;padding:10px 16px;border-radius:10px;border:2px solid var(--rule);background:var(--sheet);color:var(--ink);cursor:pointer}
+.done-btn:hover{border-color:var(--done)}
+.done-btn .box{width:22px;height:22px;border-radius:6px;border:2px solid var(--soft);display:grid;place-items:center;font-size:14px}
+.part.is-done .done-btn{border-color:var(--done);background:var(--done-wash)}
+.part.is-done .done-btn .box{background:var(--done);border-color:var(--done);color:#fff}
+.part.is-done .done-btn .box::before{content:"✓"}
+
+/* the big copy button */
+.copy-zone{background:var(--sheet);border:2px dashed var(--blue);border-radius:14px;padding:22px;margin:16px 0;text-align:center}
+.copy-btn{font:700 1.25rem "Atkinson Hyperlegible",sans-serif;background:var(--blue);color:var(--blue-ink);border:0;border-radius:12px;padding:16px 28px;cursor:pointer;min-width:260px}
+.copy-btn:hover{filter:brightness(1.08)}
+.copy-btn.ok{background:var(--done);color:#fff}
+.copy-msg{margin:12px 0 0;font-size:17px;min-height:1.6em}
+details{margin:12px 0}
+summary{cursor:pointer;color:var(--blue)}
+pre{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:14px;overflow:auto;font:14px/1.5 "Atkinson Hyperlegible Mono",ui-monospace,monospace;text-align:left;max-height:340px}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse;font-size:17px;margin:10px 0 18px}
+.tbl th,.tbl td{text-align:left;vertical-align:top;padding:10px 10px;border-bottom:1px solid var(--rule)}
+.tbl th{font-weight:700;color:var(--soft);font-size:15px}
+.tblwrap{overflow-x:auto}
+dl.words{display:grid;grid-template-columns:max-content 1fr;gap:10px 20px;margin:0 0 8px;font-size:17px}
+dl.words dt{font-weight:700}
+dl.words dd{margin:0;color:var(--soft)}
+
+.after{border-top:1px solid var(--rule);padding-top:36px;margin-top:8px}
+.after h2{font-size:1.6rem;margin:0 0 .5em}
+footer{color:var(--soft);font-size:15px;margin-top:40px}
+
+/* lightbox */
+dialog{border:0;padding:0;background:transparent;max-width:96vw;max-height:94vh}
+dialog::backdrop{background:rgba(10,14,20,.85)}
+dialog img{max-width:96vw;max-height:88vh;border-radius:8px;background:#fff;display:block}
+dialog form{text-align:center;margin-top:10px}
+dialog button{font:inherit;padding:8px 18px;border-radius:8px;border:0;cursor:pointer}
+
+@media (max-width:900px){
+  .page{grid-template-columns:1fr;gap:0}
+  .toc{display:none}
+  h1{font-size:2rem}
+  .part{padding-left:60px}
+  .part-num{width:40px;height:40px;font-size:19px}
+  .part::before{left:19px;top:48px}
+  .bar-count{display:none}
+  dl.words{grid-template-columns:1fr}
+  dl.words dd{margin-bottom:8px}
+}
+@media (max-width:520px){ .dots a{width:28px;height:28px;font-size:13px} body{font-size:18px} }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="bar-in">
+    <a class="bar-title" href="#top"><img src="img/icon.svg" alt="">NAS Control Panel install guide</a>
+    <ol class="dots" id="dots" aria-label="Parts"></ol>
+    <span class="bar-count" id="count"></span>
+  </div>
+</header>
+
+<div class="page" id="top">
+  <nav class="toc" aria-label="Contents">
+    <ol id="toc"></ol>
+    <div class="extra">
+      <a href="#using">Using the panel</a>
+      <a href="#forgot">Forgot password</a>
+      <a href="#problems">Something not working?</a>
+      <a href="#brands">Other NAS brands</a>
+      <a href="https://github.com/ibiddle/nas-panel">Project on GitHub</a>
+    </div>
+  </nav>
+
+<main>
+  <h1>Install NAS Control Panel on your UGREEN NAS</h1>
+  <p class="lede">Every click is written down, with pictures. No experience needed.</p>
+  <ul class="promise">
+    <li>No commands to type</li>
+    <li>Nothing to download or open on your computer</li>
+    <li>You copy one block of settings and paste it into your NAS</li>
+  </ul>
+  <p class="facts"><span><b>Time:</b> about 15 minutes</span><span><b>You need:</b> a UGREEN NAS and a computer on the same home network</span><span><b>Other makes:</b> <a href="#brands">see here</a></span></p>
+
+  <section class="part" id="words">
+    <div class="part-num" aria-hidden="true">?</div>
+    <h2>Words you'll see</h2>
+    <p class="why">Skip this if you already know them.</p>
+    <dl class="words">
+      <dt>NAS</dt><dd>Your network storage box, for example a UGREEN DXP2800.</dd>
+      <dt>UGOS</dt><dd>What you see when you log in to a UGREEN NAS in a web browser. It looks like a computer desktop.</dd>
+      <dt>Docker</dt><dd>An app on your NAS that runs other apps (like Jellyfin, Plex, or this panel) in sealed boxes, so they can't mess up the NAS.</dd>
+      <dt>Container</dt><dd>One app running inside Docker.</dd>
+      <dt>Project</dt><dd>A small group of containers set up together from one block of settings.</dd>
+      <dt>Settings</dt><dd>A short block of text that tells Docker what to download and how to run it. You never open it with a program; you copy it from this page and paste it into Docker.</dd>
+      <dt>IP address</dt><dd>Your NAS's number on your home network, for example <code>192.168.1.50</code>.</dd>
+      <dt>Port</dt><dd>A number on the end of an address after a colon, like <code>:8090</code>. It picks which app on the NAS you're talking to.</dd>
+      <dt>Copy, paste</dt><dd>Copy is <kbd>Ctrl</kbd> + <kbd>C</kbd>, paste is <kbd>Ctrl</kbd> + <kbd>V</kbd>: hold <kbd>Ctrl</kbd> (bottom-left of the keyboard), tap the letter, let go. On a Mac use <kbd>Cmd</kbd> instead of <kbd>Ctrl</kbd>.</dd>
+    </dl>
+  </section>
+
+  <!-- PART 1 -->
+  <section class="part" id="p1" data-part="1" data-title="Log in and find your NAS's address">
+    <div class="part-num" aria-hidden="true">1</div>
+    <h2>Log in and find your NAS's address</h2>
+    <p class="why">You'll type this address in Part 8 to open the panel.</p>
+    <ol class="steps">
+      <li>Open your web browser (Chrome, Edge, Firefox or Safari) and log in to your NAS the way you normally do. You'll see the UGOS desktop, with icons down the left-hand side.
+        <div class="note">Only ever used the <b>UGREEN app</b> on your PC? The desktop inside it is the same, so follow along in there.</div></li>
+      <li>Double-click <span class="ui">Control Panel</span>.</li>
+      <li>In the list on the left, click <span class="ui">Network</span>.</li>
+      <li>Click the <span class="ui">Network connection</span> tab at the top.</li>
+      <li>Next to <span class="ui">LAN1 (Connected)</span> you'll see something like <code>(192.168.1.50 / DHCP)</code>. The numbers before the <code>/</code> are your <b>IP address</b>. Write them down.
+        <figure><button type="button" data-zoom><img src="img/ugos-ip.png" alt="Control Panel, Network connection tab, with the LAN1 line circled" loading="lazy"></button><figcaption>The address is blurred here for privacy. Yours will show real numbers.</figcaption></figure></li>
+      <li>Close Control Panel with the <span class="ui">✕</span> in its top-right corner. Don't change anything here.</li>
+    </ol>
+    <button class="done-btn" type="button"><span class="box"></span>I've done Part 1</button>
+  </section>
+
+  <!-- PART 2 -->
+  <section class="part" id="p2" data-part="2" data-title="Check Docker is installed">
+    <div class="part-num" aria-hidden="true">2</div>
+    <h2>Check Docker is installed</h2>
+    <p class="why">Look at the icons on your UGOS desktop. Is there a blue whale called <span class="ui">Docker</span> (②)?</p>
+    <figure><button type="button" data-zoom><img src="img/ugos-0-desktop.png" alt="UGOS desktop with App Center (1) and Docker (2) circled" loading="lazy" style="max-width:300px"></button></figure>
+    <p><b>Yes:</b> skip to Part 3. <b>No:</b> install it:</p>
+    <ol class="steps">
+      <li>Double-click <span class="ui">App Center</span> (①).</li>
+      <li>Click in the <span class="ui">Search</span> box at the top-left, type <span class="type">Docker</span> and press <kbd>Enter</kbd>.</li>
+      <li>Click <span class="ui">Install</span> next to Docker. (In the picture it says <i>Open</i> because Docker is already installed there.)
+        <figure><button type="button" data-zoom><img src="img/ugos-appcenter.png" alt="App Center search results for Docker" loading="lazy"></button></figure></li>
+      <li>Wait for it to finish (a minute or two). If it asks which drive or "volume" to use, keep the one it suggests and click <span class="ui">Confirm</span>.</li>
+      <li>Close App Center with the <span class="ui">✕</span>.</li>
+    </ol>
+    <button class="done-btn" type="button"><span class="box"></span>I've done Part 2</button>
+  </section>
+
+  <!-- PART 3 -->
+  <section class="part" id="p3" data-part="3" data-title="Copy the settings">
+    <div class="part-num" aria-hidden="true">3</div>
+    <h2>Copy the settings</h2>
+    <p class="why">Click the button. That's all there is to this part.</p>
+    <div class="copy-zone">
+      <button class="copy-btn" id="copy" type="button">Copy settings</button>
+      <p class="copy-msg" id="copy-msg" aria-live="polite">Click it once. It turns green when the settings are copied.</p>
+    </div>
+    <details><summary>Show me what I'm copying</summary><pre id="compose">Loading…</pre></details>
+    <details><summary>The button didn't work?</summary>
+      <ol class="steps">
+        <li>Click inside the box that appears under <i>Show me what I'm copying</i>.</li>
+        <li>Press <kbd>Ctrl</kbd> + <kbd>A</kbd> to select it all, then <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy.</li>
+      </ol>
+    </details>
+    <p>Now go back to your NAS's browser tab: click its tab at the very top of your browser.</p>
+    <button class="done-btn" type="button"><span class="box"></span>I've done Part 3</button>
+  </section>
+
+  <!-- PART 4 -->
+  <section class="part" id="p4" data-part="4" data-title="Create the project in Docker">
+    <div class="part-num" aria-hidden="true">4</div>
+    <h2>Create the project in Docker</h2>
+    <ol class="steps">
+      <li>On the UGOS desktop, double-click <span class="ui">Docker</span>. To fill the screen, click the square <span class="ui">☐</span> button in its top-right corner.</li>
+      <li>In Docker's left-hand menu click <span class="ui">Project</span>, then the blue <span class="ui">Create</span> button.
+        <figure><button type="button" data-zoom><img src="img/ugos-1-project.png" alt="Docker, Project page, Create button circled" loading="lazy"></button></figure></li>
+      <li>Click in the <span class="ui">Name</span> box and type <span class="type">nas-panel</span></li>
+      <li>Now choose the folder where the panel keeps its settings:
+        <ol class="steps">
+          <li>Click the small <b>folder icon</b> at the right-hand end of the <span class="ui">Storage path</span> box.</li>
+          <li>Click the folder called <span class="ui">docker</span> (①), then <span class="ui">Create folder</span> (②).
+            <figure><button type="button" data-zoom><img src="img/ugos-folder-1.png" alt="Folder selection window" loading="lazy" style="max-width:420px"></button></figure></li>
+          <li>A box appears with the words <i>Create folder</i> in it. Press <kbd>Backspace</kbd> until it's empty, type <span class="type">nas-panel</span> and click <span class="ui">Confirm</span>.
+            <figure><button type="button" data-zoom><img src="img/ugos-folder-2.png" alt="Create folder box" loading="lazy" style="max-width:420px"></button></figure></li>
+          <li>Click the small <span class="ui">▸</span> arrow next to <span class="ui">docker</span>, click your new <span class="ui">nas-panel</span> folder, then <span class="ui">Confirm</span> at the bottom.</li>
+        </ol>
+        The <span class="ui">Storage path</span> box now says something like <code>Shared folder/docker/nas-panel</code>.</li>
+      <li>Click once inside the big empty box under <span class="ui">Compose configuration</span>, then press <kbd>Ctrl</kbd> + <kbd>V</kbd>. About 40 lines of text appear.
+        <figure><button type="button" data-zoom><img src="img/ugos-2-create.png" alt="Create project form: name (1), storage path (2) and pasted settings (3)" loading="lazy"></button></figure></li>
+    </ol>
+    <button class="done-btn" type="button"><span class="box"></span>I've done Part 4</button>
+  </section>
+
+  <!-- PART 5 -->
+  <section class="part" id="p5" data-part="5" data-title="Check three lines">
+    <div class="part-num" aria-hidden="true">5</div>
+    <h2>Check three lines</h2>
+    <p class="why">Usually nothing needs changing.</p>
+    <ol class="steps">
+      <li>Look at the grey text just <b>above</b> the big box (①). It says something like <b>PUID=1000 PGID=10</b>.</li>
+      <li>Look at lines 14, 15 and 16 in the box (②), the ones ending in <code>&lt;-- CHECK</code>.
+        <figure><button type="button" data-zoom><img src="img/ugos-3-settings.png" alt="The settings with the PUID/PGID hint (1) and lines 14 to 16 (2) circled" loading="lazy"></button></figure></li>
+      <li>Compare them:
+        <div class="tblwrap"><table class="tbl">
+          <tr><th>Line</th><th>Leave it if…</th><th>Otherwise…</th></tr>
+          <tr><td><code>TZ: Europe/London</code></td><td>you're in the UK</td><td>change <code>Europe/London</code> to your area, e.g. <code>Europe/Paris</code> or <code>America/New_York</code> (<a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">full list</a>, "TZ identifier" column)</td></tr>
+          <tr><td><code>PUID: "1000"</code></td><td>the grey text says <b>PUID=1000</b></td><td>change <code>1000</code> to the PUID number in the grey text</td></tr>
+          <tr><td><code>PGID: "10"</code></td><td>the grey text says <b>PGID=10</b></td><td>change <code>10</code> to the PGID number in the grey text</td></tr>
+        </table></div></li>
+      <li>If you changed the time zone, scroll down the box and change the second <code>TZ</code> line (line 33) to match.
+        <figure><button type="button" data-zoom><img src="img/ugos-3b-tz2.png" alt="Line 33, the second time zone line" loading="lazy"></button></figure></li>
+    </ol>
+    <div class="note"><b>To change a value:</b> double-click it (for example <code>1000</code>) so it's highlighted, then type the new one. Keep the quote marks <code>" "</code>.</div>
+    <div class="stop"><b>Don't change anything else.</b> Don't add or remove spaces at the start of lines. The spaces matter.</div>
+    <button class="done-btn" type="button"><span class="box"></span>I've done Part 5</button>
+  </section>
+
+  <!-- PART 6 -->
+  <section class="part" id="p6" data-part="6" data-title="Start it">
+    <div class="part-num" aria-hidden="true">6</div>
+    <h2>Start it</h2>
+    <ol class="steps">
+      <li>At the bottom, make sure <span class="ui">Run immediately after creation</span> is ticked, then click <span class="ui">Deploy</span>.
+        <figure><button type="button" data-zoom><img src="img/ugos-4-deploy.png" alt="The Run immediately tick box and Deploy button" loading="lazy"></button></figure></li>
+      <li><b>Wait 1–2 minutes</b> while your NAS downloads the panel.</li>
+      <li>Click <span class="ui">Container</span> in Docker's left-hand menu. You'll see two new entries, both with a green <span class="ui">Running</span> label:
+        <figure><button type="button" data-zoom><img src="img/ugos-5-running.png" alt="nas-panel and nas-panel-updater, both Running" loading="lazy"></button></figure>
+        <b>nas-panel</b> is the control panel. <b>nas-panel-updater</b> keeps it up to date every night; you never need to touch it.</li>
+    </ol>
+    <div class="note"><b>A red error instead?</b> The paste probably went wrong. Go to <span class="ui">Project</span>, click <span class="ui">···</span> next to <b>nas-panel</b> → <span class="ui">Delete</span>, and start Part 4 again. Your NAS isn't harmed.</div>
+    <button class="done-btn" type="button"><span class="box"></span>I've done Part 6</button>
+  </section>
+
+  <!-- PART 7 -->
+  <section class="part" id="p7" data-part="7" data-title="Get your setup code">
+    <div class="part-num" aria-hidden="true">7</div>
+    <h2>Get your one-time setup code</h2>
+    <p class="why">This proves you're the owner when you open the panel for the first time.</p>
+    <ol class="steps">
+      <li>In <span class="ui">Container</span>, click the <b>name</b> <span class="ui">nas-panel</span> (the words, not the switch).</li>
+      <li>Click the <span class="ui">Log</span> tab at the top (①).
+        <figure><button type="button" data-zoom><img src="img/ugos-6-log.png" alt="The Log tab (1) and Search box (2)" loading="lazy"></button></figure></li>
+      <li>Near the top of the black box, look for:
+<pre>==================================================
+  NAS PANEL SETUP CODE:  4F7A19C2
+  Open http://&lt;your-NAS-IP&gt;:8090 and enter this code
+==================================================</pre>
+        Write down the 8 letters and numbers after <b>SETUP CODE:</b>. Yours will be different.</li>
+      <li>Can't see it? Click <span class="ui">Search</span> (②), type <span class="type">SETUP</span> and press <kbd>Enter</kbd>.</li>
+    </ol>
+    <button class="done-btn" type="button"><span class="box"></span>I've done Part 7</button>
+  </section>
+
+  <!-- PART 8 -->
+  <section class="part" id="p8" data-part="8" data-title="Open the panel">
+    <div class="part-num" aria-hidden="true">8</div>
+    <h2>Open the panel and choose your password</h2>
+    <ol class="steps">
+      <li>Open a new browser tab: press <kbd>Ctrl</kbd> + <kbd>T</kbd>.</li>
+      <li>Type <span class="type">http://</span>, then your IP address from Part 1, then <span class="type">:8090</span>, and press <kbd>Enter</kbd>.
+        <div class="note">Example: if your IP address is <code>192.168.1.50</code>, type <span class="type">http://192.168.1.50:8090</span></div></li>
+      <li>Type the setup code from Part 7.</li>
+      <li>Choose a password of at least 8 characters, type it twice, and click <span class="ui">Create password</span>. Write the password down somewhere safe.
+        <figure><button type="button" data-zoom><img src="img/panel-setup.png" alt="The panel's first-time setup page" loading="lazy"></button></figure></li>
+      <li>You're in. Press <kbd>Ctrl</kbd> + <kbd>D</kbd>, then click <span class="ui">Done</span>, to bookmark it.
+        <figure><button type="button" data-zoom><img src="img/panel-home.png" alt="The panel's home page" loading="lazy"></button></figure></li>
+    </ol>
+    <div class="note">Type the wrong password 5 times within 10 minutes and the panel locks for 10 minutes. This stops anyone guessing it.</div>
+    <button class="done-btn" type="button"><span class="box"></span>I've done Part 8</button>
+  </section>
+
+  <!-- PART 9 -->
+  <section class="part" id="p9" data-part="9" data-title="Add a desktop icon (optional)">
+    <div class="part-num" aria-hidden="true">9</div>
+    <h2>Add a desktop icon <span style="font-weight:400;color:var(--soft)">(optional)</span></h2>
+    <ol class="steps">
+      <li>Go back to <span class="ui">Docker</span> → <span class="ui">Container</span>.</li>
+      <li>On the <b>nas-panel</b> line, click <span class="ui">···</span> (①), then <span class="ui">Desktop shortcut</span> (②).
+        <figure><button type="button" data-zoom><img src="img/ugos-7-menu.png" alt="The ··· menu with Desktop shortcut" loading="lazy"></button></figure></li>
+      <li>Everything is filled in, including port <b>8090</b>. Click <span class="ui">Confirm</span>.
+        <figure><button type="button" data-zoom><img src="img/ugos-8-shortcut.png" alt="Desktop shortcut window" loading="lazy" style="max-width:400px"></button></figure></li>
+    </ol>
+    <p>A <b>nas-panel</b> icon now appears on your UGOS desktop. Double-click it any time to open the panel.</p>
+    <button class="done-btn" type="button"><span class="box"></span>I've done Part 9</button>
+  </section>
+
+  <!-- AFTER -->
+  <section class="after" id="using">
+    <h2>Using it: show films from another NAS or PC in Jellyfin or Plex</h2>
+    <h3>First, write down four things about the device that has the films</h3>
+    <div class="tblwrap"><table class="tbl">
+      <tr><th>What</th><th>Example</th><th>Where to find it</th></tr>
+      <tr><td>Its IP address</td><td><code>192.168.1.60</code></td><td>Another UGREEN: Part 1 of this guide. A Windows PC: Settings → Network &amp; internet → your connection → <i>IPv4 address</i></td></tr>
+      <tr><td>The shared folder's name</td><td><code>Media</code></td><td>The folder you see when you type <code>\\192.168.1.60</code> into Windows File Explorer's address bar</td></tr>
+      <tr><td>A username</td><td><code>jellyfin-read</code></td><td>Best: a new user on that device that can only <b>read</b> the folder</td></tr>
+      <tr><td>That user's password</td><td></td><td></td></tr>
+    </table></div>
+
+    <h3>Step 1: Save the share</h3>
+    <ol class="steps">
+      <li>In the panel, click <span class="ui">🔗 Network Shares</span>, then <span class="ui">➕ Add a share</span>.</li>
+      <li>Fill in the boxes. <b>Short name</b> is any lower-case name, like <span class="type">films</span>. Leave <b>Folder inside it</b> empty unless the films are in a sub-folder. Leave <b>SMB version</b> on 3.0.</li>
+      <li>Click <span class="ui">Test &amp; save</span>. It only saves if it can connect. If it can't, it says why.
+        <figure><button type="button" data-zoom><img src="img/panel-add-share.png" alt="The Add a share form filled in" loading="lazy"></button></figure></li>
+    </ol>
+    <h3>Step 2: Connect it to an app</h3>
+    <ol class="steps">
+      <li>Under <span class="ui">2. Connect a share to an app</span>, choose your share and your app (e.g. <span class="ui">jellyfin</span>). Leave the other two boxes.</li>
+      <li>Click <span class="ui">Connect</span>. The app restarts for a few seconds. If anything goes wrong, it's put back exactly as it was.
+        <figure><button type="button" data-zoom><img src="img/panel-connect.png" alt="Connect a share to an app" loading="lazy"></button></figure></li>
+      <li>The share appears under <span class="ui">3. What's connected</span>, e.g. at <code>/media/network/films</code>.
+        <figure><button type="button" data-zoom><img src="img/panel-shares.png" alt="The Network Shares page showing what's connected" loading="lazy"></button></figure></li>
+    </ol>
+    <h3>Step 3: Tell Jellyfin or Plex about the folder</h3>
+    <p><b>Jellyfin:</b> profile picture (top-right) → <span class="ui">Dashboard</span> → <span class="ui">Libraries</span> → your <b>Movies</b> library → under <span class="ui">Folders</span> click <span class="ui">+</span> → type <span class="type">/media/network/films</span> → <span class="ui">OK</span> → <span class="ui">Save</span>.</p>
+    <p><b>Plex:</b> <span class="ui">Settings</span> (spanner) → <span class="ui">Manage</span> → <span class="ui">Libraries</span> → <span class="ui">Edit</span> → <span class="ui">Add folders</span> → <span class="ui">Browse for media folder</span> → <span class="ui">media</span> → <span class="ui">network</span> → <span class="ui">films</span> → <span class="ui">Add</span> → <span class="ui">Save changes</span>.</p>
+    <div class="note">The connection is <b>read-only</b>: Jellyfin and Plex can play the films but can never change or delete them.</div>
+  </section>
+
+  <section class="after" id="forgot">
+    <h2>I forgot my password</h2>
+    <ol class="steps">
+      <li>Double-click <span class="ui">Files</span> on the UGOS desktop. Open <span class="ui">docker</span> → <span class="ui">nas-panel</span> → <span class="ui">data</span>.</li>
+      <li>Right-click the file <span class="ui">auth.json</span> → <span class="ui">Delete</span>. Only that one file.</li>
+      <li>In <span class="ui">Docker</span> → <span class="ui">Container</span>, click <span class="ui">···</span> next to nas-panel → <span class="ui">Restart</span>.</li>
+      <li>Do Part 7 and Part 8 again. Your saved shares are kept.</li>
+    </ol>
+  </section>
+
+  <section class="after" id="problems">
+    <h2>Something not working?</h2>
+    <div class="tblwrap"><table class="tbl">
+      <tr><th>What you see</th><th>What to do</th></tr>
+      <tr><td>A red error when you click <b>Deploy</b></td><td>The paste went wrong. Start Part 4 again, paste once, and change nothing except Part 5.</td></tr>
+      <tr><td>"This site can't be reached"</td><td>The address must start with <code>http://</code> (not https), use your NAS's IP address, and end in <code>:8090</code>. Check nas-panel shows <b>Running</b>.</td></tr>
+      <tr><td>"No Docker Compose apps found"</td><td>Your other apps must have been created through <b>Docker → Project</b>. Apps from App Center aren't listed.</td></tr>
+      <tr><td>A share won't save</td><td>Read the red message: it says what's wrong (wrong password, wrong share name, can't reach the device…).</td></tr>
+      <tr><td>"Locked – try again in … minutes"</td><td>Wrong password 5 times. Wait 10 minutes.</td></tr>
+    </table></div>
+    <p>Still stuck? <a href="https://github.com/ibiddle/nas-panel/issues">Ask on GitHub</a> (needs a free GitHub account). Never post passwords.</p>
+  </section>
+
+  <section class="after" id="brands">
+    <h2>Other NAS brands</h2>
+    <p>The steps are the same, but the buttons have different names, and you'll need to change the two ID numbers in Part 5.</p>
+    <div class="tblwrap"><table class="tbl">
+      <tr><th>NAS</th><th>Where "Project → Create" is</th><th>PUID / PGID</th><th>Apps folder</th></tr>
+      <tr><td>Synology (DSM 7.2+)</td><td>Container Manager → Project → Create</td><td>often 1026 / 100</td><td><code>/volume1/docker</code></td></tr>
+      <tr><td>QNAP</td><td>Container Station → Applications → Create</td><td>often 1000 / 100</td><td><code>/share/Container</code></td></tr>
+      <tr><td>Unraid</td><td>Docker Compose Manager plugin → Add new stack</td><td>99 / 100</td><td><code>/mnt/user/appdata</code></td></tr>
+    </table></div>
+    <p>If the apps folder is different, change <b>every</b> <code>/volume1/docker</code> in the settings to your folder.</p>
+  </section>
+
+  <footer>NAS Control Panel is free and open source (MIT). <a href="https://github.com/ibiddle/nas-panel">Project page on GitHub</a>.</footer>
+</main>
+</div>
+
+<dialog id="zoom"><img alt=""><form method="dialog"><button>Close</button></form></dialog>
+
+<script>
+(function(){
+  var parts=[].slice.call(document.querySelectorAll('.part[data-part]'));
+  var KEY='naspanel-guide-done';
+  var done={};
+  try{done=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+  var dots=document.getElementById('dots'), toc=document.getElementById('toc'), count=document.getElementById('count');
+  parts.forEach(function(p){
+    var n=p.dataset.part, t=p.dataset.title;
+    dots.insertAdjacentHTML('beforeend','<li><a href="#p'+n+'" title="Part '+n+': '+t+'" aria-label="Part '+n+': '+t+'">'+n+'</a></li>');
+    toc.insertAdjacentHTML('beforeend','<li><a href="#p'+n+'"><span class="n">'+n+'</span><span>'+t+'</span></a></li>');
+    p.querySelector('.done-btn').addEventListener('click',function(){
+      done[n]=!done[n];
+      try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}
+      paint();
+      if(done[n]){var next=document.getElementById('p'+(+n+1));if(next)next.scrollIntoView();}
+    });
+  });
+  function paint(){
+    var c=0;
+    parts.forEach(function(p,i){
+      var on=!!done[p.dataset.part]; if(on)c++;
+      p.classList.toggle('is-done',on);
+      p.querySelector('.done-btn').setAttribute('aria-pressed',on);
+      dots.children[i].firstChild.classList.toggle('is-done',on);
+      toc.children[i].classList.toggle('is-done',on);
+    });
+    count.textContent=c+' of '+parts.length+' done';
+  }
+  paint();
+
+  // Copy settings
+  var RAW='https://raw.githubusercontent.com/ibiddle/nas-panel/main/compose.yaml';
+  var pre=document.getElementById('compose'), btn=document.getElementById('copy'), msg=document.getElementById('copy-msg');
+  var text='';
+  fetch(RAW,{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){text=t;pre.textContent=t})
+    .catch(function(){pre.textContent='Couldn\'t load the settings. Open https://github.com/ibiddle/nas-panel/blob/main/compose.yaml and copy them from there.'});
+  btn.addEventListener('click',function(){
+    if(!text){msg.textContent='Still loading. Wait a second and click again.';return}
+    var ok=function(){btn.textContent='Copied ✓';btn.classList.add('ok');msg.innerHTML='<b>Copied.</b> Nothing else to do here. You'll paste it in Part 4.'};
+    if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(ok,fallback)}else{fallback()}
+    function fallback(){
+      var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+      try{document.execCommand('copy');ok()}catch(e){msg.textContent='Your browser blocked copying. Use "The button didn\'t work?" below.'}
+      document.body.removeChild(ta);
+    }
+  });
+
+  // Zoom pictures
+  var dlg=document.getElementById('zoom'), big=dlg.querySelector('img');
+  document.querySelectorAll('[data-zoom]').forEach(function(b){
+    b.addEventListener('click',function(){var i=b.querySelector('img');big.src=i.src;big.alt=i.alt;dlg.showModal()});
+  });
+  dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.close()});
+})();
+</script>
+</body>
+</html>

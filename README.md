@@ -4,7 +4,9 @@ A small, password-protected web page for your NAS that connects shared folders f
 
 ![NAS Control Panel - Network Shares](docs/img/panel-shares.png)
 
-> **New to Docker or GitHub?** Follow the **[step-by-step install guide with screenshots](docs/INSTALL.md)**. It takes about 10 minutes and needs no experience.
+## 👉 [Install guide: click here](https://ibiddle.github.io/nas-panel/)
+
+**New to all this?** The **[step-by-step install guide](https://ibiddle.github.io/nas-panel/)** walks you through every click, with pictures. No experience needed, nothing to type.
 
 - Tests the connection before saving anything
 - Always mounts shares **read-only** - apps can never change or delete the files
