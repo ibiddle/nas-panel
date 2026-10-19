@@ -11,5 +11,5 @@ COPY updater.sh /updater.sh
 ENV HOME=/tmp PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PANEL_DATA=/data \
     PUID=1000 PGID=1000 APPS_DIRS=/volume1/docker PANEL_PORT=8090
 EXPOSE 8090
-HEALTHCHECK --interval=60s --timeout=5s CMD wget -qO /dev/null http://127.0.0.1:${PANEL_PORT}/login || exit 1
+HEALTHCHECK --interval=60s --timeout=5s CMD [ -f /tmp/is-updater ] || wget -qO /dev/null http://127.0.0.1:${PANEL_PORT}/login || exit 1
 ENTRYPOINT ["/entrypoint.sh"]

@@ -3,6 +3,7 @@
 # Once a day at UPDATE_TIME it pulls the latest image and restarts the panel only if it changed.
 # Works out the compose project from its own container labels - no extra settings needed.
 #   Update now:  docker exec nas-panel-updater /updater.sh now
+touch /tmp/is-updater 2>/dev/null   # tells the health check this container is the updater
 T=${UPDATE_TIME:-04:00}
 SVC=${PANEL_SERVICE:-nas-panel}
 SELF_SVC=${UPDATER_SERVICE:-updater}
