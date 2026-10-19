@@ -1,9 +1,7 @@
 # =====================================================================
-#  NAS Control Panel  -  http://<your-NAS-IP>:8090
-#  1. Edit the four lines marked  <-- CHANGE  below
-#  2. docker compose up -d     (or paste into your NAS's Docker "Project")
-#  3. First login: get the setup code with   docker logs nas-panel
-#  Auto-update: the 'updater' service checks for a new version daily (delete it to turn off)
+#  NAS Control Panel - settings file
+#  UGREEN NAS: this works as it is. Only check the lines marked <-- CHECK
+#  Step-by-step guide: https://github.com/ibiddle/nas-panel/blob/main/docs/INSTALL.md
 # =====================================================================
 services:
   nas-panel:
@@ -13,27 +11,27 @@ services:
     ports:
       - "8090:8090"
     environment:
-      TZ: Europe/London            # <-- CHANGE: your time zone
-      PUID: "1000"                 # <-- CHANGE: your NAS user's ID   (run: id <username>)
-      PGID: "1000"                 # <-- CHANGE: your NAS user's group (UGREEN admin = 10, Synology users = 100)
-      APPS_DIRS: /volume1/docker   # <-- CHANGE: folder holding your docker compose apps (comma-separate several)
+      TZ: Europe/London            # <-- CHECK: your time zone (UK = Europe/London)
+      PUID: "1000"                 # <-- CHECK: first number shown above the box (PUID=...)
+      PGID: "10"                   # <-- CHECK: second number shown above the box (PGID=...)
+      APPS_DIRS: /volume1/docker   # folder your Docker apps are in (UGREEN: leave as it is)
       # NAS_UI_URL: http://192.168.1.10:9999   # optional: link to your NAS admin page
     security_opt:
       - no-new-privileges:true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /volume1/docker:/volume1/docker      # <-- must match APPS_DIRS, SAME path on both sides
+      - /volume1/docker:/volume1/docker      # must be the same as APPS_DIRS, on both sides
       - ./data:/data
-      - /proc/1/mounts:/host/mounts:ro       # optional: lets the panel list the NAS's own mounts
+      - /proc/1/mounts:/host/mounts:ro
 
-  updater:                         # optional auto-update - delete this whole section to turn it off
+  updater:                         # auto-update every night - delete this section to turn it off
     image: ghcr.io/ibiddle/nas-panel:latest
     container_name: nas-panel-updater
     restart: unless-stopped
     entrypoint: ["/updater.sh"]
     environment:
-      TZ: Europe/London            # <-- CHANGE: same time zone as above
-      UPDATE_TIME: "04:00"         # daily check time (24h)
+      TZ: Europe/London            # <-- CHECK: same time zone as above
+      UPDATE_TIME: "04:00"         # time to check for updates (24-hour clock)
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /volume1/docker:/volume1/docker:ro   # <-- must contain THIS compose.yaml, SAME path on both sides
+      - /volume1/docker:/volume1/docker:ro
