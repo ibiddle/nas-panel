@@ -3,6 +3,7 @@
 #  1. Edit the four lines marked  <-- CHANGE  below
 #  2. docker compose up -d     (or paste into your NAS's Docker "Project")
 #  3. First login: get the setup code with   docker logs nas-panel
+#  Auto-update: the 'updater' service checks for a new version daily (delete it to turn off)
 # =====================================================================
 services:
   nas-panel:
@@ -24,3 +25,15 @@ services:
       - /volume1/docker:/volume1/docker      # <-- must match APPS_DIRS, SAME path on both sides
       - ./data:/data
       - /proc/1/mounts:/host/mounts:ro       # optional: lets the panel list the NAS's own mounts
+
+  updater:                         # optional auto-update - delete this whole section to turn it off
+    image: ghcr.io/ibiddle/nas-panel:latest
+    container_name: nas-panel-updater
+    restart: unless-stopped
+    entrypoint: ["/updater.sh"]
+    environment:
+      TZ: Europe/London            # <-- CHANGE: same time zone as above
+      UPDATE_TIME: "04:00"         # daily check time (24h)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /volume1/docker:/volume1/docker:ro   # <-- must contain THIS compose.yaml, SAME path on both sides

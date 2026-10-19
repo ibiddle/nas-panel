@@ -58,7 +58,14 @@ For each connected share the panel writes `<app>/shares/<name>.yaml` (a compose 
 Each page is a file in `app/tools/` exposing a Flask Blueprint `bp` and a `TOOL` dict; list it in `TOOL_MODULES` in `app/app.py` and rebuild.
 
 ## Updating
-    docker compose pull && docker compose up -d
+**Automatic (default):** the `updater` service in `compose.yaml` checks for a new version every day at `UPDATE_TIME` (04:00 by default) and restarts the panel only if there is one. Your password and settings are kept. Its volume must include the folder holding `compose.yaml`, at the same path.
+
+- Update now: `docker exec nas-panel-updater /updater.sh now`
+- See what it did: `docker logs nas-panel-updater`
+- Turn it off: delete the `updater:` section from `compose.yaml` and run `docker compose up -d --remove-orphans`
+- Stay on one version: change both `image:` lines to e.g. `ghcr.io/ibiddle/nas-panel:1.1.0`
+
+**Manual:** `docker compose pull && docker compose up -d`
 
 ## Licence
 MIT
