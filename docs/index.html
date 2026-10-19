@@ -238,19 +238,44 @@ dialog button{font:inherit;padding:8px 18px;border-radius:8px;border:0;cursor:po
   </section>
 
   <!-- PART 3 -->
-  <section class="part" id="p3" data-part="3" data-title="Copy the settings from this page">
+  <section class="part" id="p3" data-part="3" data-title="Start a new project in Docker">
     <div class="part-num" aria-hidden="true">3</div>
-    <h2>Copy the settings from this page</h2>
-    <p class="why">The button is <b>right here on this guide page</b>, just below. It is <b>not</b> in Docker or on your NAS.</p>
+    <h2>Start a new project in Docker</h2>
+    <p class="why">A "project" is how Docker installs an app. You'll give it a name and a folder now, and its settings in Part 4.</p>
     <ol class="steps">
-      <li>Stay on this guide page and click the big blue <span class="ui">Copy settings</span> button below. It turns green when it's done.</li>
-      <li>Then click your <b>NAS's tab</b> at the very top of your browser to go back to it.</li>
+      <li>Go to your NAS's tab and double-click <span class="ui">Docker</span> on the UGOS desktop.
+        <div class="note"><b>Optional:</b> to make the Docker window bigger, click the middle of the three small buttons at its top-right corner (between <b>–</b> and <b>✕</b>):
+        <figure><img src="img/ugos-maximise.png" alt="The maximise button, between minimise and close" style="max-width:252px"></figure></div></li>
+      <li>In Docker's left-hand menu click <span class="ui">Project</span>, then the blue <span class="ui">Create</span> button.
+        <figure><button type="button" data-zoom><img src="img/ugos-1-project.png" alt="Docker, Project page, Create button circled" loading="lazy"></button></figure></li>
+      <li>Click in the <span class="ui">Name</span> box and type <span class="type">nas-panel</span></li>
+      <li>Now choose the folder where the panel keeps its settings:
+        <ol class="steps">
+          <li>Click the small <b>folder icon</b> at the right-hand end of the <span class="ui">Storage path</span> box.</li>
+          <li>Click the folder called <span class="ui">docker</span> (①), then <span class="ui">Create folder</span> (②).
+            <figure><button type="button" data-zoom><img src="img/ugos-folder-1.png" alt="Folder selection window" loading="lazy" style="max-width:420px"></button></figure></li>
+          <li>A box appears with the words <i>Create folder</i> in it. Press <kbd>Backspace</kbd> until it's empty, type <span class="type">nas-panel</span> and click <span class="ui">Confirm</span>.
+            <figure><button type="button" data-zoom><img src="img/ugos-folder-2.png" alt="Create folder box" loading="lazy" style="max-width:420px"></button></figure></li>
+          <li>Click the small <span class="ui">▸</span> arrow next to <span class="ui">docker</span>, click your new <span class="ui">nas-panel</span> folder, then <span class="ui">Confirm</span> at the bottom.</li>
+        </ol>
+        The <span class="ui">Storage path</span> box now says something like <code>Shared folder/docker/nas-panel</code>.</li>
     </ol>
-    <div class="copy-zone">
-      <button class="copy-btn" id="copy" type="button">Copy settings</button>
-      <p class="copy-msg" id="copy-msg" aria-live="polite">Click it once. It turns green when the settings are copied.</p>
-    </div>
-    <details><summary>Show me what I'm copying</summary><pre id="compose"># =====================================================================
+    <p>Leave this Docker window open. You'll fill in the big empty box next.</p>
+    <button class="done-btn" type="button"><span class="box"></span>I've done Part 3</button>
+  </section>
+
+  <!-- PART 4 -->
+  <section class="part" id="p4" data-part="4" data-title="Copy the settings into Docker">
+    <div class="part-num" aria-hidden="true">4</div>
+    <h2>Copy the settings into Docker</h2>
+    <p class="why">The big empty box under <b>Compose configuration</b> needs a list of instructions telling Docker what to download and how to run it. We've written that list for you. You just copy it from this page and paste it into that box.</p>
+    <ol class="steps">
+      <li><b>Copy:</b> on <b>this guide page</b>, click the blue button below. It turns green when the list is copied.
+        <div class="copy-zone">
+          <button class="copy-btn" id="copy" type="button">Copy settings</button>
+          <p class="copy-msg" id="copy-msg" aria-live="polite">Click it once.</p>
+        </div>
+        <details><summary>Show me what I'm copying</summary><pre id="compose"># =====================================================================
 #  NAS Control Panel - settings file
 #  UGREEN NAS: this works as it is. Only check the lines marked &lt;-- CHECK
 #  Step-by-step guide: https://github.com/ibiddle/nas-panel/blob/main/docs/INSTALL.md
@@ -288,36 +313,16 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /volume1/docker:/volume1/docker:ro
 </pre></details>
-    <details><summary>The button didn't work?</summary>
-      <ol class="steps">
-        <li>Click inside the box that appears under <i>Show me what I'm copying</i>.</li>
-        <li>Press <kbd>Ctrl</kbd> + <kbd>A</kbd> to select it all, then <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy.</li>
-      </ol>
-    </details>
-        <button class="done-btn" type="button"><span class="box"></span>I've done Part 3</button>
-  </section>
-
-  <!-- PART 4 -->
-  <section class="part" id="p4" data-part="4" data-title="Create the project in Docker">
-    <div class="part-num" aria-hidden="true">4</div>
-    <h2>Create the project in Docker</h2>
-    <ol class="steps">
-      <li>On the UGOS desktop, double-click <span class="ui">Docker</span>. To fill the screen, click the square <span class="ui">☐</span> button in its top-right corner.</li>
-      <li>In Docker's left-hand menu click <span class="ui">Project</span>, then the blue <span class="ui">Create</span> button.
-        <figure><button type="button" data-zoom><img src="img/ugos-1-project.png" alt="Docker, Project page, Create button circled" loading="lazy"></button></figure></li>
-      <li>Click in the <span class="ui">Name</span> box and type <span class="type">nas-panel</span></li>
-      <li>Now choose the folder where the panel keeps its settings:
-        <ol class="steps">
-          <li>Click the small <b>folder icon</b> at the right-hand end of the <span class="ui">Storage path</span> box.</li>
-          <li>Click the folder called <span class="ui">docker</span> (①), then <span class="ui">Create folder</span> (②).
-            <figure><button type="button" data-zoom><img src="img/ugos-folder-1.png" alt="Folder selection window" loading="lazy" style="max-width:420px"></button></figure></li>
-          <li>A box appears with the words <i>Create folder</i> in it. Press <kbd>Backspace</kbd> until it's empty, type <span class="type">nas-panel</span> and click <span class="ui">Confirm</span>.
-            <figure><button type="button" data-zoom><img src="img/ugos-folder-2.png" alt="Create folder box" loading="lazy" style="max-width:420px"></button></figure></li>
-          <li>Click the small <span class="ui">▸</span> arrow next to <span class="ui">docker</span>, click your new <span class="ui">nas-panel</span> folder, then <span class="ui">Confirm</span> at the bottom.</li>
-        </ol>
-        The <span class="ui">Storage path</span> box now says something like <code>Shared folder/docker/nas-panel</code>.</li>
-      <li>Click once inside the big empty box under <span class="ui">Compose configuration</span>, then press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste the settings you copied in Part 3. About 40 lines of text appear. <i>Nothing appears?</i> Go back to the guide tab, click <span class="ui">Copy settings</span> again, then come back and paste.
-        <figure><button type="button" data-zoom><img src="img/ugos-2-create.png" alt="Create project form: name (1), storage path (2) and pasted settings (3)" loading="lazy"></button></figure></li>
+        <details><summary>The button didn't work?</summary>
+          <ol class="steps">
+            <li>Click <i>Show me what I'm copying</i> above, then click inside the text that appears.</li>
+            <li>Press <kbd>Ctrl</kbd> + <kbd>A</kbd> to select it all, then <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy.</li>
+          </ol>
+        </details></li>
+      <li><b>Switch:</b> click your <b>NAS's tab</b> at the very top of your browser, to go back to the Docker window from Part 3.</li>
+      <li><b>Paste:</b> click once inside the big empty box under <span class="ui">Compose configuration</span>, then press <kbd>Ctrl</kbd> + <kbd>V</kbd>. About 40 lines of text appear.
+        <figure><button type="button" data-zoom><img src="img/ugos-2-create.png" alt="Create project form: name (1), storage path (2) and pasted settings (3)" loading="lazy"></button></figure>
+        <i>Nothing appeared?</i> Go back to this guide tab, click <span class="ui">Copy settings</span> again, then switch back and paste.</li>
     </ol>
     <button class="done-btn" type="button"><span class="box"></span>I've done Part 4</button>
   </section>
@@ -358,7 +363,7 @@ services:
         <figure><button type="button" data-zoom><img src="img/ugos-5-running.png" alt="nas-panel and nas-panel-updater, both Running" loading="lazy"></button></figure>
         <b>nas-panel</b> is the control panel. <b>nas-panel-updater</b> keeps it up to date every night; you never need to touch it.</li>
     </ol>
-    <div class="note"><b>A red error instead?</b> The paste probably went wrong. Go to <span class="ui">Project</span>, click <span class="ui">···</span> next to <b>nas-panel</b> → <span class="ui">Delete</span>, and start Part 4 again. Your NAS isn't harmed.</div>
+    <div class="note"><b>A red error instead?</b> The paste probably went wrong. Go to <span class="ui">Project</span>, click <span class="ui">···</span> next to <b>nas-panel</b> → <span class="ui">Delete</span>, and start again from Part 3. Your NAS isn't harmed.</div>
     <button class="done-btn" type="button"><span class="box"></span>I've done Part 6</button>
   </section>
 
@@ -462,7 +467,7 @@ services:
     <h2>Something not working?</h2>
     <div class="tblwrap"><table class="tbl">
       <tr><th>What you see</th><th>What to do</th></tr>
-      <tr><td>A red error when you click <b>Deploy</b></td><td>The paste went wrong. Start Part 4 again, paste once, and change nothing except Part 5.</td></tr>
+      <tr><td>A red error when you click <b>Deploy</b></td><td>The paste went wrong. Start again from Part 3, paste once, and change nothing except Part 5.</td></tr>
       <tr><td>"This site can't be reached"</td><td>The address must start with <code>http://</code> (not https), use your NAS's IP address, and end in <code>:8090</code>. Check nas-panel shows <b>Running</b>.</td></tr>
       <tr><td>"No Docker Compose apps found"</td><td>Your other apps must have been created through <b>Docker → Project</b>. Apps from App Center aren't listed.</td></tr>
       <tr><td>A share won't save</td><td>Read the red message: it says what's wrong (wrong password, wrong share name, can't reach the device…).</td></tr>
@@ -526,7 +531,7 @@ services:
   var text=pre.textContent;   // built into the page, so the button always works
   fetch(RAW,{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(t){if(t&&t.indexOf('services:')>-1){text=t;pre.textContent=t}}).catch(function(){});
   btn.addEventListener('click',function(){
-        var ok=function(){btn.textContent='Copied ✓';btn.classList.add('ok');msg.innerHTML='<b>Copied.</b> Nothing else to do here. You\'ll paste it in Part 4.'};
+        var ok=function(){btn.textContent='Copied ✓';btn.classList.add('ok');msg.innerHTML='<b>Copied.</b> Now click your NAS\'s tab and paste it.'};
     if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(ok,fallback)}else{fallback()}
     function fallback(){
       var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
