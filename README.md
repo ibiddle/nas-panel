@@ -27,7 +27,7 @@ Your NAS downloads it automatically when you start the compose file below. To bu
 
 ### Run it
 1. Make a folder on the NAS for the panel, e.g. `/volume1/docker/nas-panel`, and put [`compose.yaml`](compose.yaml) in it.
-2. Edit the lines marked `<-- CHANGE` in `compose.yaml`:
+2. Check the lines marked `<-- CHECK` in `compose.yaml` (on a UGREEN NAS the defaults usually work as they are):
    | Setting | What to put |
    |---|---|
    | `PUID` / `PGID` | Your NAS user's IDs. SSH in and run `id yourname`. UGREEN admin is usually `1000`/`10`; Synology `1026`/`100` |
