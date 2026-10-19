@@ -93,6 +93,12 @@ figure button{all:unset;cursor:zoom-in;display:block;border-radius:10px}
 figure img{display:block;border:1px solid var(--rule);border-radius:10px;background:#fff}
 figcaption{font-size:15px;color:var(--soft);margin-top:6px}
 
+
+/* label every screenshot as a picture so nobody tries to type into it */
+figure button{position:relative}
+figure button::after{content:"Picture only";position:absolute;top:8px;left:8px;background:rgba(23,32,46,.82);color:#fff;font:700 13px "Atkinson Hyperlegible",sans-serif;padding:3px 9px;border-radius:999px;pointer-events:none}
+figure img{opacity:.97;box-shadow:0 0 0 4px var(--paper),0 0 0 5px var(--rule)}
+
 /* notes */
 .note,.stop{border-radius:10px;padding:14px 18px;margin:16px 0;font-size:17px}
 .note{background:var(--blue-wash)}
@@ -176,6 +182,7 @@ dialog button{font:inherit;padding:8px 18px;border-radius:8px;border:0;cursor:po
 <main>
   <h1>Install NAS Control Panel on your UGREEN NAS</h1>
   <p class="lede">Every click is written down, with pictures. No experience needed.</p>
+  <div class="note"><b>How this works:</b> keep this guide open in one browser tab and your NAS in another. You'll read a step here, then click your NAS's tab to do it. The pictures marked <b>Picture only</b> show what your NAS screen will look like. They're not the real thing, so you can't click or type in them.</div>
   <ul class="promise">
     <li>No commands to type</li>
     <li>Nothing to download or open on your computer</li>
@@ -320,7 +327,7 @@ services:
           </ol>
         </details></li>
       <li><b>Switch:</b> click your <b>NAS's tab</b> at the very top of your browser, to go back to the Docker window from Part 3.</li>
-      <li><b>Paste:</b> click once inside the big empty box under <span class="ui">Compose configuration</span>, then press <kbd>Ctrl</kbd> + <kbd>V</kbd>. About 40 lines of text appear.
+      <li><b>Paste:</b> on your <b>NAS tab</b> (not this guide), click once inside the big empty box under <span class="ui">Compose configuration</span>, then press <kbd>Ctrl</kbd> + <kbd>V</kbd>. About 40 lines of text appear. The picture below shows what it looks like afterwards. It's only a picture; you can't paste into it.
         <figure><button type="button" data-zoom><img src="img/ugos-2-create.png" alt="Create project form: name (1), storage path (2) and pasted settings (3)" loading="lazy"></button></figure>
         <i>Nothing appeared?</i> Go back to this guide tab, click <span class="ui">Copy settings</span> again, then switch back and paste.</li>
     </ol>
