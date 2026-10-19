@@ -2,7 +2,7 @@
 # NAS Control Panel entrypoint: detects the Docker socket's group, then drops to PUID:PGID.
 set -e
 SOCK=/var/run/docker.sock
-CMD="gunicorn -w 1 --threads 4 -b 0.0.0.0:${PANEL_PORT:-8090} --timeout 600 --access-logfile - app:app"
+CMD="gunicorn -w 1 --threads 4 -b 0.0.0.0:${PANEL_PORT:-8090} --timeout 600 app:app"
 
 if [ ! -S "$SOCK" ]; then
   echo "ERROR: Docker socket not found. Add  - /var/run/docker.sock:/var/run/docker.sock  to volumes." >&2

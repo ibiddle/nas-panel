@@ -2,6 +2,10 @@
 
 A small, password-protected web page for your NAS that connects shared folders from **other** NASes or PCs (SMB / Windows shares) to your Docker apps — Jellyfin, Plex, Emby, anything run with Docker Compose. No config files to edit, no command line after install.
 
+![NAS Control Panel - Network Shares](docs/img/panel-shares.png)
+
+> **New to Docker or GitHub?** Follow the **[step-by-step install guide with screenshots](docs/INSTALL.md)**. It takes about 10 minutes and needs no experience.
+
 - Tests the connection before saving anything
 - Always mounts shares **read-only** - apps can never change or delete the files
 - If connecting fails, the app is put back exactly as it was
@@ -30,7 +34,7 @@ Your NAS downloads it automatically when you start the compose file below. To bu
    | `APPS_DIRS` | The folder your Docker Compose apps live in (each app in its own sub-folder). Mount it at the **same path** in `volumes` |
    | `TZ` | Your time zone, e.g. `Europe/London` |
 3. Start it: in your NAS's Docker app create a **Project** from the compose file, or run `docker compose up -d` in that folder.
-4. Get the one-time setup code: `docker logs nas-panel` (or the container's **Log** tab) — look for `NAS PANEL SETUP CODE`.
+4. Get the one-time setup code: `docker logs nas-panel` (or the container's **Log** tab) - look for `NAS PANEL SETUP CODE`.
 5. Open `http://<your-NAS-IP>:8090`, enter the code and choose a password.
 6. Optional: add a desktop shortcut in your NAS's Docker app pointing to port 8090 (UGOS: Containers → ··· → Desktop shortcut).
 

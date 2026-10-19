@@ -59,7 +59,10 @@ def setup_code():
 
 
 if not auth().get("hash"):
-    print(f"*** NAS PANEL SETUP CODE: {setup_code()} ***", flush=True)
+    print("=" * 50, flush=True)
+    print(f"  NAS PANEL SETUP CODE:  {setup_code()}", flush=True)
+    print("  Open http://<your-NAS-IP>:8090 and enter this code", flush=True)
+    print("=" * 50, flush=True)
 
 
 def client_ip():
