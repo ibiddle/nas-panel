@@ -1,0 +1,22 @@
+name: Keep guide settings in sync
+on:
+  push:
+    branches: [main]
+    paths: [compose.yaml]
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          import html, re
+          p='docs/index.html'; s=open(p).read()
+          c=html.escape(open('compose.yaml').read())
+          s=re.sub(r'<pre id="compose">.*?</pre>', lambda m:'<pre id="compose">'+c+'</pre>', s, flags=re.S)
+          open(p,'w').write(s)
+          PY
+          git config user.name github-actions; git config user.email github-actions@users.noreply.github.com
+          git diff --quiet || (git commit -am "Sync guide settings with compose.yaml" && git push)
