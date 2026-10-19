@@ -1,12 +1,12 @@
 # NAS Control Panel
 
-A small, password-protected web page for your NAS that connects shared folders from **other** NASes or PCs (SMB / Windows shares) to your Docker apps — Jellyfin, Plex, Emby, anything run with Docker Compose. No config files to edit, no command line after install.
-
-![NAS Control Panel - Network Shares](docs/img/panel-shares.png)
-
 ## 👉 [Install guide: click here](https://ibiddle.github.io/nas-panel/)
 
 **New to all this?** The **[step-by-step install guide](https://ibiddle.github.io/nas-panel/)** walks you through every click, with pictures. No experience needed, nothing to type.
+
+A small, password-protected web page for your NAS that connects shared folders from **other** NASes or PCs (SMB / Windows shares) to your Docker apps — Jellyfin, Plex, Emby, anything run with Docker Compose. No config files to edit, no command line after install.
+
+![NAS Control Panel - Network Shares](docs/img/panel-shares.png)
 
 - Tests the connection before saving anything
 - Always mounts shares **read-only** - apps can never change or delete the files
