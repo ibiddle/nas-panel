@@ -2,7 +2,7 @@
 # NAS Control Panel auto-updater (runs from the same image with entrypoint /updater.sh).
 # Once a day at UPDATE_TIME it pulls the latest image and restarts the panel only if it changed.
 # Works out the compose project from its own container labels - no extra settings needed.
-#   Update now:  docker exec nas-panel-updater /updater.sh now
+#   Update now:  restart the nas-panel-updater container (or: docker exec nas-panel-updater /updater.sh now)
 touch /tmp/is-updater 2>/dev/null   # tells the health check this container is the updater
 T=${UPDATE_TIME:-04:00}
 SVC=${PANEL_SERVICE:-nas-panel}
@@ -46,6 +46,8 @@ update(){
 [ "$1" = "now" ] && { update; exit $?; }
 check
 log "Auto-update for '$SVC' (project $PROJECT) scheduled daily at $T"
+# Also check once at start-up, so "Restart" on this container in the NAS's Docker app = "update now".
+sleep 20 && update
 while true; do
   [ "$(date +%H:%M)" = "$T" ] && { update; sleep 61; }
   sleep 30

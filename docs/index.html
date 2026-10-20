@@ -172,6 +172,7 @@ dialog button{font:inherit;padding:8px 18px;border-radius:8px;border:0;cursor:po
     <ol id="toc"></ol>
     <div class="extra">
       <a href="#using">Using the panel</a>
+      <a href="#updates">Updates</a>
       <a href="#forgot">Forgot password</a>
       <a href="#problems">Something not working?</a>
       <a href="#brands">Other NAS brands</a>
@@ -459,6 +460,17 @@ services:
     <p><b>Jellyfin:</b> profile picture (top-right) → <span class="ui">Dashboard</span> → <span class="ui">Libraries</span> → your <b>Movies</b> library → under <span class="ui">Folders</span> click <span class="ui">+</span> → type <span class="type">/media/network/films</span> → <span class="ui">OK</span> → <span class="ui">Save</span>.</p>
     <p><b>Plex:</b> <span class="ui">Settings</span> (spanner) → <span class="ui">Manage</span> → <span class="ui">Libraries</span> → <span class="ui">Edit</span> → <span class="ui">Add folders</span> → <span class="ui">Browse for media folder</span> → <span class="ui">media</span> → <span class="ui">network</span> → <span class="ui">films</span> → <span class="ui">Add</span> → <span class="ui">Save changes</span>.</p>
     <div class="note">The connection is <b>read-only</b>: Jellyfin and Plex can play the films but can never change or delete them.</div>
+  </section>
+
+  <section class="after" id="updates">
+    <h2>Updates</h2>
+    <p>Nothing to do: every night at 4 am, <b>nas-panel-updater</b> checks for a new version and installs it. Your password and settings are kept.</p>
+    <h3>Want the newest version right now?</h3>
+    <ol class="steps">
+      <li>Open <span class="ui">Docker</span> → <span class="ui">Container</span>.</li>
+      <li>On the <b>nas-panel-updater</b> line (not nas-panel), click <span class="ui">···</span> → <span class="ui">Restart</span>.</li>
+      <li>Wait about a minute. If there's a new version, the <b>nas-panel</b> line restarts by itself. If not, nothing changes.</li>
+    </ol>
   </section>
 
   <section class="after" id="forgot">
