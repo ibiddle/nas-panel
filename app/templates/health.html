@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block main %}<h1>Share Health</h1>
+<p class="sub">Every {{ minutes }} minutes the panel checks each connected share. If one has dropped it fixes it by itself: puts it back, restarts the app, or reconnects it.</p>
+{% if not alerts %}<div class="flash err">You won't be told about problems yet. <a href="{{ url_for('notify.index') }}">Set up Alerts →</a> (takes 2 minutes, free).</div>{% endif %}
+<div class="card"><div class="actions" style="justify-content:space-between;align-items:center">
+<span class="mute small">Last check: {{ last or 'not yet (first check runs about 2 minutes after start-up)' }}{% if busy %} - <b>checking now…</b>{% endif %}</span>
+<form method="post" action="{{ url_for('.check') }}"><input type="hidden" name="csrf" value="{{ csrf }}"><button data-busy="Starting…">Check now</button></form></div>
+{% if rows %}<div class="tablewrap" style="margin-top:12px"><table><tr><th>Share</th><th>App</th><th>Status</th><th>Details</th><th></th></tr>
+{% for c in rows %}<tr><td><b>{{ c.share }}</b><br><code>{{ c.target }}</code></td><td>{{ c.project }}</td>
+<td><span class="pill {{ c.status }}">{{ label.get(c.status, c.status) }}</span><br><span class="small mute">since {{ c.since or c.checked }}</span></td>
+<td class="small">{{ c.msg }}<br><span class="mute">checked {{ c.checked }}</span></td>
+<td>{% if c.status in ('gone','nolink') %}<form method="post" action="{{ url_for('.forget') }}" data-confirm="Stop watching this connection?"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="key" value="{{ c.project }}|{{ c.share }}"><button class="ghost">Stop watching</button></form>{% endif %}</td></tr>{% endfor %}
+</table></div>{% else %}<p class="mute" style="margin-top:12px">No shares connected to apps yet - connect one on <a href="{{ url_for('shares.index') }}">Network Shares</a>.</p>{% endif %}</div>
+<div class="card small"><h2>What the colours mean</h2>
+<p><span class="pill ok">Working</span> fine. <span class="pill fixed">Fixed</span> it had dropped and was repaired automatically.
+<span class="pill offline">Other device offline</span> the NAS/PC with the files is off or unreachable - it reconnects by itself once that device is back.
+<span class="pill failed">Not working</span> automatic repair didn't work; it tries again every hour. <span class="pill stopped">App stopped</span> not checked while the app is off.</p></div>
+{% endblock %}

@@ -9,8 +9,9 @@
 <a href="{{ url_for('activity') }}" class="{{ 'on' if request.endpoint=='activity' }}">📝 Activity log</a>
 <a href="{{ url_for('password') }}" class="{{ 'on' if request.endpoint=='password' }}">🔑 Change password</a>
 <form method="post" action="{{ url_for('logout') }}"><input type="hidden" name="csrf" value="{{ csrf }}"><button>↩ Log out</button></form>
+<div class="ver">Version {{ VER.version }}{% if VER.updated %}<br>Updated {{ VER.updated }}{% endif %}</div>
 </nav>
-<main>{% include "_flash.html" %}{% block main %}{% endblock %}</main></div>{% endblock %}
+<main>{% if PROBLEMS and request.blueprint != 'health' %}<a class="banner" href="{{ url_for('health.index') }}">⚠️ {{ PROBLEMS|length }} share connection{{ 's' if PROBLEMS|length != 1 }} not working - click for details</a>{% endif %}{% include "_flash.html" %}{% block main %}{% endblock %}</main></div>{% endblock %}
 <script>
 document.addEventListener('submit',e=>{const f=e.target;if(f.dataset.confirm&&!confirm(f.dataset.confirm)){e.preventDefault();return}
 const b=f.querySelector('button[type=submit],button:not([type])');if(b){setTimeout(()=>{b.disabled=true;b.dataset.t=b.textContent;b.textContent=f.dataset.busy||'Working…'},0)}});

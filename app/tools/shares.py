@@ -350,6 +350,21 @@ def detach_raw(a, name):
     return detach_project(a, name)
 
 
+# ---- Wanted connections (so the health check can put back a share that went missing) ----
+def wanted():
+    return core.load("attachments.json", {})
+
+
+def want(project, name, service, target, on=True):
+    w = wanted()
+    key = f"{project}|{name}"
+    if on:
+        w[key] = {"project": project, "share": name, "service": service, "target": target}
+    else:
+        w.pop(key, None)
+    core.save("attachments.json", w)
+
+
 # ---- Routes ------------------------------------------------------------------------
 @bp.route("/")
 def index():
@@ -466,6 +481,8 @@ def attach():
             return redirect(url_for(".index"))
         ok, msg = attach_raw(a, name, sh, service, target)
         core.log(f"Connect '{name}' to {project} at {target}: {'OK' if ok else 'FAILED'}", ip())
+        if ok:
+            want(project, name, service, target)
     if ok:
         extra = ""
         if a.get("external"):
@@ -487,6 +504,8 @@ def detach():
             flash("Nothing to disconnect.", "err")
             return redirect(url_for(".index"))
         rc, out = detach_raw(a, name)
+        if rc == 0:
+            want(project, name, None, None, on=False)
         core.log(f"Disconnect '{name}' from {project}: {'OK' if rc == 0 else 'FAILED'}", ip())
     flash(f"'{name}' disconnected from {project}." if rc == 0 else f"Problem restarting {project}: {out[-300:]}",
           "ok" if rc == 0 else "err")

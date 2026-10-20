@@ -32,3 +32,7 @@ details summary{cursor:pointer;color:var(--acc)}
 .center{max-width:380px;margin:10vh auto;padding:0 16px}
 ol li{margin-bottom:6px}
 @media (max-width:760px){.wrap{flex-direction:column}nav{width:auto;display:flex;flex-wrap:wrap;gap:4px;align-items:center}nav .brand{padding:4px 8px}nav .sep{display:none}main{padding:16px}}
+nav .ver{color:#8a93a6;font-size:12px;padding:16px 10px 0;line-height:1.4}
+.banner{display:block;background:var(--errbg);color:var(--err);border:1px solid var(--err);padding:10px 14px;border-radius:10px;margin-bottom:14px;text-decoration:none;font-weight:600}
+.pill.ok,.pill.fixed{color:var(--ok)}.pill.offline,.pill.failed,.pill.gone,.pill.nolink{color:var(--err);border-color:var(--err)}.pill.stopped,.pill.empty{color:var(--mute)}
+.steps li{margin:4px 0}

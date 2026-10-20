@@ -13,7 +13,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import core
 
 # ---- Tools (pages). Add new modules here. ----------------------------------
-TOOL_MODULES = ["tools.shares", "tools.mounts", "tools.apps"]
+TOOL_MODULES = ["tools.shares", "tools.health", "tools.notify", "tools.mounts", "tools.apps"]
 
 MAX_FAILS = 5          # wrong passwords...
 WINDOW = 10 * 60       # ...within 10 minutes...
@@ -63,6 +63,25 @@ if not auth().get("hash"):
     print(f"  NAS PANEL SETUP CODE:  {setup_code()}", flush=True)
     print("  Open http://<your-NAS-IP>:8090 and enter this code", flush=True)
     print("=" * 50, flush=True)
+
+
+def _announce_version():
+    """Log (and alert) once when the panel starts on a new version."""
+    v = core.version_info()["version"]
+    last = core.load("version.json", {}).get("version")
+    if last != v:
+        core.save("version.json", {"version": v, "since": time.strftime("%Y-%m-%d %H:%M")})
+        if last:
+            core.log(f"Panel updated: v{last} -> v{v}")
+            from tools import notify
+            notify.send_async(f"Updated to v{v}", f"NAS Control Panel was updated from v{last} to v{v}.")
+        else:
+            core.log(f"Panel started (v{v})")
+
+
+_announce_version()
+from tools import health as _health   # noqa: E402
+_health.start()
 
 
 def client_ip():
@@ -128,7 +147,9 @@ def headers(resp):
 
 @app.context_processor
 def inject():
-    return {"TOOLS": TOOLS, "csrf": session.get("csrf", ""), "now": datetime.datetime.now()}
+    from tools import health
+    return {"TOOLS": TOOLS, "csrf": session.get("csrf", ""), "now": datetime.datetime.now(),
+            "VER": core.version_info(), "PROBLEMS": health.problems() if session.get("ok") else []}
 
 
 def start_session():

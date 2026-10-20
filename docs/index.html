@@ -172,6 +172,7 @@ dialog button{font:inherit;padding:8px 18px;border-radius:8px;border:0;cursor:po
     <ol id="toc"></ol>
     <div class="extra">
       <a href="#using">Using the panel</a>
+      <a href="#alerts">Alerts on your phone</a>
       <a href="#updates">Updates</a>
       <a href="#forgot">Forgot password</a>
       <a href="#problems">Something not working?</a>
@@ -460,6 +461,21 @@ services:
     <p><b>Jellyfin:</b> profile picture (top-right) → <span class="ui">Dashboard</span> → <span class="ui">Libraries</span> → your <b>Movies</b> library → under <span class="ui">Folders</span> click <span class="ui">+</span> → type <span class="type">/media/network/films</span> → <span class="ui">OK</span> → <span class="ui">Save</span>.</p>
     <p><b>Plex:</b> <span class="ui">Settings</span> (spanner) → <span class="ui">Manage</span> → <span class="ui">Libraries</span> → <span class="ui">Edit</span> → <span class="ui">Add folders</span> → <span class="ui">Browse for media folder</span> → <span class="ui">media</span> → <span class="ui">network</span> → <span class="ui">films</span> → <span class="ui">Add</span> → <span class="ui">Save changes</span>.</p>
     <div class="note">The connection is <b>read-only</b>: Jellyfin and Plex can play the films but can never change or delete them.</div>
+  </section>
+
+  <section class="after" id="alerts">
+    <h2>Get told on your phone if a share stops working</h2>
+    <p>The panel checks your connected shares every 10 minutes and fixes them by itself if they drop. To get a message when that happens (or when the other NAS is switched off):</p>
+    <ol class="steps">
+      <li>On your phone, open the App Store (iPhone) or Google Play (Android), search for <b>ntfy</b>, and install it. It's free and needs no account.</li>
+      <li>Make up a private name nobody could guess, for example <code>sam-nas-7f3k9q</code>. Write it down. (Anyone who knows the name could read your alerts, so don't use something obvious.)</li>
+      <li>Open the ntfy app, tap <span class="ui">+</span>, type your name into <span class="ui">Topic</span>, then tap <span class="ui">Subscribe</span>.</li>
+      <li>On your computer, open the panel and click <span class="ui">🔔 Alerts</span> in the menu on the left.</li>
+      <li>Type the same name into the <span class="ui">Topic name</span> box. Leave the server box as it is.</li>
+      <li>Scroll down and click <span class="ui">Save and send test</span>. Your phone should beep within a few seconds. If it doesn't, check the name is exactly the same in both places (capitals count).</li>
+    </ol>
+    <p>Prefer email? The same page has an email section. For Gmail you need an <b>app password</b> (Google Account → Security → App passwords), not your normal password.</p>
+    <p>To see how each share is doing, click <span class="ui">🩺 Share Health</span>. The version number and update time are at the bottom of the menu.</p>
   </section>
 
   <section class="after" id="updates">

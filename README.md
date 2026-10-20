@@ -45,6 +45,12 @@ Your NAS downloads it automatically when you start the compose file below. To bu
 2. **Connect a share to an app**: pick the share and the app. It appears inside the app at `/media/network/<name>` (changeable).
 3. In the app, add that folder to a library (Jellyfin: Dashboard → Libraries → Manage folders → +).
 
+**Share Health** checks every connected share every 10 minutes (change with `CHECK_MINUTES`). If one has dropped it fixes it by itself: puts the share back if the app lost it (e.g. after an App Center update), restarts the app, or reconnects it. If the other NAS/PC is switched off it waits and reconnects when it's back. A red banner shows at the top of the panel while anything is wrong.
+
+**Alerts** tells you when a share breaks, is fixed, or the panel updates - by phone (free [ntfy](https://ntfy.sh) app), email, or a Discord/Slack webhook. Only changes are sent, not every check.
+
+The version number and when it was last updated are shown at the bottom of the menu and on the Home page.
+
 **NAS Shares** lists shares mounted on the NAS itself and has a tester. Mounting a share for the whole NAS is left to your NAS's own remote-mount tool (it needs root).
 
 ## Requirements & limits
