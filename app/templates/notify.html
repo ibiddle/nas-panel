@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% block main %}<h1>Alerts</h1>
+<p class="sub">Choose how you want to be told when a share stops working, is fixed, or the panel updates. Use one or more.</p>
+<form method="post"><input type="hidden" name="csrf" value="{{ csrf }}">
+<div class="card"><h2>📱 Phone notification (easiest, free)</h2>
+<ol class="small steps"><li>On your phone, install the free app <b>ntfy</b> (App Store or Google Play).</li>
+<li>Make up a private topic name that nobody could guess, e.g. <code>sam-nas-7f3k9q</code> (anyone who knows it can read the alerts), and type it below.</li>
+<li>In the ntfy app tap <b>+</b>, type the same topic name, tap <b>Subscribe</b>.</li>
+<li>Click <b>Save and send test</b> at the bottom of this page - your phone should beep.</li></ol>
+<div class="row"><div><label>Topic name</label><input name="ntfy_topic" value="{{ s.ntfy_topic or '' }}" placeholder="e.g. sam-nas-7f3k9q" autocomplete="off"></div>
+<div><label>ntfy server (leave as it is)</label><input name="ntfy_server" value="{{ s.ntfy_server or 'https://ntfy.sh' }}"></div></div></div>
+<div class="card"><h2>✉️ Email</h2>
+<p class="small mute">Gmail: server <code>smtp.gmail.com</code>, port <code>587</code>, username = your Gmail address, password = an <b>app password</b> (Google Account → Security → App passwords), not your normal password.</p>
+<div class="row"><div><label>Send alerts to</label><input name="email_to" value="{{ s.email_to or '' }}" placeholder="you@example.com"></div>
+<div><label>Email server (SMTP)</label><input name="email_host" value="{{ s.email_host or '' }}" placeholder="smtp.gmail.com"></div>
+<div><label>Port</label><input name="email_port" value="{{ s.email_port or '587' }}"></div></div>
+<div class="row"><div><label>Username</label><input name="email_user" value="{{ s.email_user or '' }}" autocomplete="off"></div>
+<div><label>Password {% if has_pass %}(saved - leave blank to keep){% endif %}</label><input type="password" name="email_pass" autocomplete="new-password"></div>
+<div><label>From address (optional)</label><input name="email_from" value="{{ s.email_from or '' }}"></div></div>
+{% if has_pass %}<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" name="clear_email_pass" value="1" style="width:auto"> Remove saved email password</label>{% endif %}</div>
+<div class="card"><h2>💬 Discord / Slack / other (advanced)</h2>
+<label>Webhook address</label><input name="webhook" value="{{ s.webhook or '' }}" placeholder="https://discord.com/api/webhooks/..."></div>
+<div class="actions"><button name="action" value="save">Save</button><button name="action" value="test" class="ghost" data-busy="Sending…">Save and send test</button></div>
+</form>
+<p class="small mute" style="margin-top:14px">Alerts are only sent when something changes (broken → fixed), not every 10 minutes. Passwords are stored on this NAS only.</p>
+{% endblock %}

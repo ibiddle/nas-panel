@@ -70,3 +70,32 @@ def run(cmd, cwd=None, timeout=300):
         return p.returncode, (p.stdout + p.stderr).strip()
     except subprocess.TimeoutExpired:
         return 124, "Timed out"
+
+
+def _fmt_time(iso):
+    """Docker/ISO UTC timestamp -> '20 Oct 2026, 13:15' in the NAS's local time."""
+    try:
+        iso = iso.replace("Z", "+00:00")
+        if "." in iso:                                   # trim nanoseconds
+            head, rest = iso.split(".", 1)
+            tz = rest[rest.find("+"):] if "+" in rest else ""
+            iso = head + tz
+        return datetime.datetime.fromisoformat(iso).astimezone().strftime("%d %b %Y, %H:%M")
+    except (ValueError, TypeError, AttributeError):
+        return ""
+
+
+_version = None
+
+
+def version_info():
+    """Version number, build date, and when this copy was installed/updated on this NAS."""
+    global _version
+    if _version is None:
+        rc, created = run(["docker", "inspect", "-f", "{{.Created}}", socket.gethostname()])
+        _version = {
+            "version": os.environ.get("PANEL_VERSION", "dev"),
+            "built": _fmt_time(os.environ.get("PANEL_BUILD", "")),
+            "updated": _fmt_time(created.strip()) if rc == 0 else "",
+        }
+    return _version
