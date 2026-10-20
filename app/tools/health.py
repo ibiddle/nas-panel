@@ -66,18 +66,19 @@ def _check_one(key, w, reg, all_apps, prev):
         return "stopped", "App is stopped - not checked."
     if name in a["attached"]:
         ok, n, out = _ls(cname, a["attached"][name]["target"])
-        if ok:
-            return ("ok", f"{n} items visible") if n else ("empty", "Connected, but the folder shows empty.")
-    else:
-        out = "share missing from the app"
+        if ok and n:
+            return "ok", f"{n} items visible"
 
-    # ---- broken: try to repair ----
+    # ---- not right: is the other device reachable? ----
+    ok, msg = shares.test_share(sh)
+    if not ok:
+        if "empty" in msg:
+            return "empty", "Connected, but the shared folder is empty (or this user can't see its files)."
+        return "offline", f"Can't reach {shares.device(sh)}: {msg} Will reconnect when it's back."
+    # other device is fine, so the connection in the app is broken - repair (at most once an hour)
     if time.time() - prev.get("last_fix", 0) < FIX_GAP:
         return "failed", "Still not working. Will try to repair again within the hour."
     prev["last_fix"] = time.time()
-    ok, msg = shares.test_share(sh)
-    if not ok:
-        return "offline", f"Can't reach {shares.device(sh)}: {msg} Will reconnect when it's back."
     target = w.get("target") or f"/media/network/{name}"
     if name in a["attached"]:
         core.log(f"Health: '{name}' on {proj} not readable - restarting {cname}")
@@ -85,7 +86,7 @@ def _check_one(key, w, reg, all_apps, prev):
         if docker_api.wait_running(cname, 60):
             a = shares.apps().get(proj) or a
             ok2, n, _ = _ls(_container(a, service) or cname, target)
-            if ok2:
+            if ok2 and n:
                 return "fixed", f"Restarted the app - working again ({n} items)."
         core.log(f"Health: restart didn't help, reconnecting '{name}' to {proj}")
         shares.detach_raw(a, name)
