@@ -2,12 +2,23 @@
 import datetime
 import json
 import os
+import socket
 import subprocess
 import threading
 
 DATA = os.environ.get("PANEL_DATA", "/data")
 LOCK = threading.RLock()          # one change at a time
-SELF_IMAGE = "nas-panel:local"
+_self_image = None
+
+
+def self_image():
+    """The image this panel is running from (used for throwaway test containers)."""
+    global _self_image
+    if not _self_image:
+        rc, out = run(["docker", "inspect", "-f", "{{.Config.Image}}", socket.gethostname()])
+        _self_image = out.strip() if rc == 0 and out.strip() else os.environ.get(
+            "SELF_IMAGE", "ghcr.io/ibiddle/nas-panel:latest")
+    return _self_image
 
 
 def _p(name):

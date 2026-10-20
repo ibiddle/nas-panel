@@ -102,7 +102,7 @@ def test_share(sh):
     if rc:
         return False, out
     rc, out = core.run(["docker", "run", "--rm", "--network", "none", "--entrypoint", "ls",
-                        "-v", f"{vol}:/t:ro", core.SELF_IMAGE, "/t"], timeout=90)
+                        "-v", f"{vol}:/t:ro", core.self_image(), "/t"], timeout=90)
     core.run(["docker", "volume", "rm", "-f", vol])
     if rc:
         out = out.replace(sh["pass"], "****")
