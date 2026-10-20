@@ -22,13 +22,13 @@
 <div class="card"><h2>2. Connect a share to an app</h2>
 {% if shares and apps %}<form method="post" action="{{ url_for('.attach') }}" data-busy="Connecting… (app restarts, up to a minute)"><input type="hidden" name="csrf" value="{{ csrf }}">
 <div class="row"><div><label>Share</label><select name="name">{% for n in shares %}<option>{{ n }}</option>{% endfor %}</select></div>
-<div><label>App</label><select name="project" id="proj">{% for p, a in apps.items() %}<option value="{{ p }}" data-svcs="{{ a.services|join(',') }}" {{ 'selected' if p=='jellyfin' }}>{{ p }}</option>{% endfor %}</select></div>
+<div><label>App</label><select name="project" id="proj">{% for p, a in apps.items() %}<option value="{{ p }}" data-svcs="{{ a.services|join(',') }}" {{ 'selected' if p=='jellyfin' }}>{{ p }}{% if a.kind == 'container' %} (container){% endif %}</option>{% endfor %}</select></div>
 <div><label>Container (if the app has several)</label><select name="service" id="svc"></select></div>
 <div><label>Folder inside the app</label><input name="target" placeholder="/media/network/&lt;share name&gt;"></div></div>
-<p class="small mute">The app restarts for a few seconds. If anything fails it's put back exactly as it was.</p>
+<p class="small mute">The app restarts for a few seconds. If anything fails it's put back exactly as it was. Apps marked <b>(container)</b> weren't made as a Project: the panel rebuilds them with exactly the same settings plus the share.</p>
 <p><button>Connect</button></p></form>
 <script>const p=document.getElementById('proj'),s=document.getElementById('svc');function f(){s.innerHTML='';p.selectedOptions[0].dataset.svcs.split(',').forEach(x=>s.add(new Option(x,x)))}p.onchange=f;f()</script>
-{% elif not shares %}<p class="mute">Save a share first.</p>{% else %}<p class="mute">No Docker Compose apps found in {{ roots }}. Apps must be started with docker compose from a folder inside it.</p>{% endif %}</div>
+{% elif not shares %}<p class="mute">Save a share first.</p>{% else %}<p class="mute">No apps found in Docker.</p>{% endif %}</div>
 
 <div class="card"><h2>3. What's connected</h2>
 <div class="tablewrap"><table><tr><th>App</th><th>Share</th><th>Folder inside app</th><th></th></tr>

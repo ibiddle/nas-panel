@@ -13,6 +13,7 @@ import time
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 import core
+import docker_api
 
 TOOL = {"id": "shares", "name": "Network Shares", "icon": "🔗", "endpoint": "shares.index",
         "desc": "Connect folders from other NASes / PCs to your apps (Jellyfin, Plex...)"}
@@ -22,6 +23,7 @@ ROOTS = [r.rstrip("/") + "/" for r in os.environ.get("APPS_DIRS", "/volume1/dock
 MOUNT_UID = os.environ.get("PUID", "1000")
 MOUNT_GID = os.environ.get("PGID", "1000")
 SELF_PROJECT = "nas-panel"
+SELF_NAMES = {"nas-panel", "nas-panel-updater"}
 
 # ---- Validation ---------------------------------------------------------------
 RE_NAME = re.compile(r"^[a-z0-9]{1,20}$")
@@ -143,8 +145,39 @@ def apps():
                 if os.path.exists(os.path.join(a["wd"], n)):
                     a["base"] = [os.path.join(a["wd"], n)]
                     break
+        a["kind"] = "project"
         a["attached"] = attached(a)
-    return dict(sorted(res.items()))
+    # Everything else: plain containers, App Center apps, projects outside APPS_DIRS
+    rc, out = core.run(["docker", "ps", "-a", "--format",
+                        "{{.Names}}|{{.State}}|{{.Label \"com.docker.compose.project\"}}"])
+    for line in out.splitlines():
+        parts = line.split("|")
+        if len(parts) != 3:
+            continue
+        cname, state, proj = parts
+        if cname in SELF_NAMES or proj == SELF_PROJECT or proj in res or cname.endswith("_panel_old"):
+            continue
+        key = cname if cname not in res else f"{cname} (container)"
+        res[key] = {"kind": "container", "project": key, "container": cname, "external": proj,
+                    "services": {cname: {"container": cname, "state": state}}}
+        res[key]["attached"] = container_attached(cname)
+    return dict(sorted(res.items(), key=lambda kv: (kv[1]["kind"] != "project", kv[0])))
+
+
+def vol_name(cname, share):
+    return f"nasshare_{re.sub(r'[^A-Za-z0-9_.-]', '_', cname)}_{share}"
+
+
+def container_attached(cname):
+    """Shares connected to a plain container, read from its mounts (volumes named nasshare_<container>_<share>)."""
+    info = docker_api.inspect(cname)
+    out = {}
+    prefix = vol_name(cname, "")
+    for m in (info or {}).get("Mounts") or []:
+        n = m.get("Name") or ""
+        if m.get("Type") == "volume" and n.startswith(prefix):
+            out[n[len(prefix):]] = {"target": m.get("Destination", "?"), "service": cname}
+    return out
 
 
 def attached(a):
@@ -235,7 +268,7 @@ def wait_running(a, service, secs=40):
     return None
 
 
-def detach_raw(a, name):
+def detach_project(a, name):
     """Remove the share from an app (files first, then restart, then drop the volume)."""
     f = os.path.join(a["wd"], "shares", f"{name}.yaml")
     if os.path.exists(f):
@@ -246,7 +279,7 @@ def detach_raw(a, name):
     return rc, out
 
 
-def attach_raw(a, name, sh, service, target):
+def attach_project(a, name, sh, service, target):
     """Connect a share to an app. Rolls back on failure. Returns (ok, message)."""
     core.run(["docker", "volume", "rm", f"{a['project']}_share_{name}"])   # drop stale copy
     write_override(a, name, sh, service, target)
@@ -265,9 +298,56 @@ def attach_raw(a, name, sh, service, target):
         else:
             out = "App didn't start with the share connected. " + compose(a, "logs", "--tail", "15", service)[1][-400:]
     out = out.replace(sh["pass"], "****")
-    detach_raw(a, name)          # roll back
+    detach_project(a, name)      # roll back
     h = hint_for(out)
     return False, (h + " " if h else "") + out[-500:] + "  - Rolled back, app is as it was."
+
+
+def cifs_opts(sh):
+    return (f"username={sh['user']},password={sh['pass']},vers={sh['vers']},"
+            f"ro,uid={MOUNT_UID},gid={MOUNT_GID},file_mode=0444,dir_mode=0555")
+
+
+def attach_container(a, name, sh, target):
+    """Connect a share to a plain container by rebuilding it with the same settings plus the share."""
+    cname = a["container"]
+    vol = vol_name(cname, name)
+    core.run(["docker", "volume", "rm", vol])
+    rc, out = core.run(["docker", "volume", "create", "--driver", "local", "--opt", "type=cifs",
+                        "--opt", f"device={device(sh)}", "--opt", f"o={cifs_opts(sh)}", vol])
+    if rc:
+        return False, out.replace(sh["pass"], "****")[-300:]
+    ok, msg = docker_api.recreate(cname, add={"Type": "volume", "Source": vol, "Target": target, "ReadOnly": True})
+    if not ok:
+        core.run(["docker", "volume", "rm", vol])
+        h = hint_for(msg)
+        return False, (h + " " if h else "") + msg.replace(sh["pass"], "****")
+    rc2, ls = core.run(["docker", "exec", cname, "ls", target], timeout=60)
+    n = len([x for x in ls.splitlines() if x.strip()])
+    return True, (f"{n} items visible at {target}" if rc2 == 0 else f"connected at {target}")
+
+
+def detach_container(a, name):
+    cname = a["container"]
+    at = container_attached(cname).get(name)
+    if not at:
+        return 0, ""
+    ok, msg = docker_api.recreate(cname, remove_target=at["target"])
+    if ok:
+        core.run(["docker", "volume", "rm", vol_name(cname, name)])
+    return (0 if ok else 1), msg
+
+
+def attach_raw(a, name, sh, service, target):
+    if a["kind"] == "container":
+        return attach_container(a, name, sh, target)
+    return attach_project(a, name, sh, service, target)
+
+
+def detach_raw(a, name):
+    if a["kind"] == "container":
+        return detach_container(a, name)
+    return detach_project(a, name)
 
 
 # ---- Routes ------------------------------------------------------------------------
@@ -387,7 +467,11 @@ def attach():
         ok, msg = attach_raw(a, name, sh, service, target)
         core.log(f"Connect '{name}' to {project} at {target}: {'OK' if ok else 'FAILED'}", ip())
     if ok:
-        flash(f"'{name}' connected to {project} - {msg}. Now add {target} to a library in {project}.", "ok")
+        extra = ""
+        if a.get("external"):
+            extra = (f" Note: {project} is managed by another tool (e.g. App Center). If that tool updates or"
+                     " reinstalls it, connect the share again here.")
+        flash(f"'{name}' connected to {project} - {msg}. Now add {target} to a library in {project}.{extra}", "ok")
     else:
         flash(f"Couldn't connect '{name}' to {project}: {msg}", "err")
     return redirect(url_for(".index"))

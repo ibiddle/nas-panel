@@ -4,7 +4,7 @@
 
 **New to all this?** The **[step-by-step install guide](https://ibiddle.github.io/nas-panel/)** walks you through every click, with pictures. No experience needed, nothing to type.
 
-A small, password-protected web page for your NAS that connects shared folders from **other** NASes or PCs (SMB / Windows shares) to your Docker apps — Jellyfin, Plex, Emby, anything run with Docker Compose. No config files to edit, no command line after install.
+A small, password-protected web page for your NAS that connects shared folders from **other** NASes or PCs (SMB / Windows shares) to your Docker apps — Jellyfin, Plex, Emby, or any other Docker app. No config files to edit, no command line after install.
 
 ![NAS Control Panel - Network Shares](docs/img/panel-shares.png)
 
@@ -48,7 +48,8 @@ Your NAS downloads it automatically when you start the compose file below. To bu
 **NAS Shares** lists shares mounted on the NAS itself and has a tester. Mounting a share for the whole NAS is left to your NAS's own remote-mount tool (it needs root).
 
 ## Requirements & limits
-- Apps must be started with **Docker Compose** from a folder inside `APPS_DIRS`. Containers created by hand or by a NAS app store aren't listed.
+- Works with **any** Docker app: Projects (Docker Compose) and containers made by hand or by a NAS app store. Projects get a small settings file added; other containers are rebuilt with exactly the same settings plus the share (and put back as they were if anything fails).
+- If an app store later updates or reinstalls an app, connect the share again.
 - The NAS kernel needs SMB/CIFS client support (nearly all NASes have it).
 - Share passwords can't contain commas or `'` (a limitation of SMB mount options).
 - Passwords for shares are stored on the NAS in `data/shares.json` and in each app's `.env`, readable only by the PUID user.
