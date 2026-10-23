@@ -492,11 +492,12 @@ services:
   <section class="after" id="forgot">
     <h2>I forgot my password</h2>
     <ol class="steps">
-      <li>Double-click <span class="ui">Files</span> on the UGOS desktop. Open <span class="ui">docker</span> → <span class="ui">nas-panel</span> → <span class="ui">data</span>.</li>
-      <li>Right-click the file <span class="ui">auth.json</span> → <span class="ui">Delete</span>. Only that one file.</li>
-      <li>In <span class="ui">Docker</span> → <span class="ui">Container</span>, click <span class="ui">···</span> next to nas-panel → <span class="ui">Restart</span>.</li>
-      <li>Do Part 7 and Part 8 again. Your saved shares are kept.</li>
+      <li>On the panel's log-in page, click <span class="ui">Forgot password?</span></li>
+      <li>Click <span class="ui">Get a reset code</span>.</li>
+      <li>Find the code: in a new browser tab log in to your NAS, open <span class="ui">Docker</span> → <span class="ui">Container</span>, click the name <b>nas-panel</b>, then the <span class="ui">Log</span> tab. Look for <b>PASSWORD RESET CODE</b> near the bottom. (If you set up <a href="#alerts">Alerts</a>, the code is also sent to your phone or email.)</li>
+      <li>Go back to the panel tab, type the code and your new password twice, and click <span class="ui">Set new password</span>. The code works for 30 minutes. Your shares and settings are kept.</li>
     </ol>
+    <p class="small">Why no email reset? The code proves you can get into your NAS itself, so nobody else on your network can reset it.</p>
   </section>
 
   <section class="after" id="problems">

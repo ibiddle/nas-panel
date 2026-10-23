@@ -117,7 +117,7 @@ def lock_message():
 
 
 # ---- Request guard -------------------------------------------------------------
-PUBLIC = {"login", "setup", "static"}
+PUBLIC = {"login", "setup", "reset", "static"}
 
 
 @app.before_request
@@ -210,6 +210,75 @@ def login():
         else:
             flash(lock_message() if locked_for() else "Wrong password.", "err")
     return render_template("login.html", locked=locked_for())
+
+
+RESET_LIFE = 30 * 60     # reset code works for 30 minutes
+RESET_GAP = 2 * 60       # a new code at most every 2 minutes
+
+
+@app.route("/reset", methods=["GET", "POST"])
+def reset():
+    """Forgotten password: a one-time code shown in the container log (and sent to Alerts, if set up).
+
+    Only someone who can open the NAS's Docker app (or receives the alerts) can see the code.
+    """
+    if not auth().get("hash"):
+        return redirect(url_for("setup"))
+    st = core.load("reset.json", {})
+    now = time.time()
+    if request.method == "POST":
+        if not hmac.compare_digest(request.form.get("csrf", ""), session.get("rcsrf", "-")):
+            abort(400)
+        if locked_for():
+            flash(lock_message(), "err")
+        elif request.form.get("action") == "send":
+            if now - st.get("made", 0) < RESET_GAP:
+                flash("A code was made less than 2 minutes ago - use that one (check the log again).", "err")
+            else:
+                code = secrets.token_hex(4).upper()
+                core.save("reset.json", {"hash": generate_password_hash(code), "made": now})
+                print("=" * 50, flush=True)
+                print(f"  NAS PANEL PASSWORD RESET CODE:  {code}", flush=True)
+                print("  Works for 30 minutes. Ignore if you didn't ask for it.", flush=True)
+                print("=" * 50, flush=True)
+                core.log("Password reset code requested", client_ip())
+                from tools import notify
+                if notify.configured():
+                    notify.send_async("Password reset code",
+                                      f"Your NAS Control Panel reset code is {code} (works for 30 minutes). "
+                                      "If you didn't ask for this, ignore it - your password hasn't changed.",
+                                      urgent=True)
+                flash("Reset code made. Find it in the nas-panel log (steps below)"
+                      + (", or on your phone/email." if notify.configured() else "."), "ok")
+            return redirect(url_for("reset", step="code"))
+        else:
+            code = request.form.get("code", "").strip().upper()
+            pw, pw2 = request.form.get("pw", ""), request.form.get("pw2", "")
+            valid = bool(st.get("hash")) and now - st.get("made", 0) < RESET_LIFE
+            if not valid:
+                flash("No valid reset code - get a new one.", "err")
+            elif not check_secret(check_password_hash(st["hash"], code), "reset code"):
+                flash(lock_message() if locked_for() else "Wrong reset code.", "err")
+            elif len(pw) < MIN_PW:
+                flash(f"Password must be at least {MIN_PW} characters.", "err")
+            elif pw != pw2:
+                flash("Passwords don't match.", "err")
+            else:
+                set_password(pw)
+                os.remove(os.path.join(core.DATA, "reset.json"))
+                core.log("Password RESET with a reset code", client_ip())
+                from tools import notify
+                notify.send_async("Password was reset", "The NAS Control Panel password was just reset. "
+                                  "If this wasn't you, reset it again and check who can use your NAS's Docker app.",
+                                  urgent=True)
+                start_session()
+                flash("Password changed - you're logged in.", "ok")
+                return redirect(url_for("home"))
+            return redirect(url_for("reset", step="code"))
+    session["rcsrf"] = session.get("rcsrf") or secrets.token_hex(16)
+    from tools import notify
+    return render_template("reset.html", rcsrf=session["rcsrf"], locked=locked_for(),
+                           step=request.args.get("step", ""), alerts=notify.configured())
 
 
 @app.route("/logout", methods=["POST"])

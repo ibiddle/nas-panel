@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% block body %}<div class="center"><div class="card">
+<h1>Forgot password</h1><p class="sub">Get a one-time reset code, then choose a new password. Your shares and settings are kept.</p>{% include "_flash.html" %}
+{% if locked %}<div class="flash err">Locked after too many wrong attempts. Try again in {{ locked // 60 + 1 }} minute(s).</div>{% endif %}
+{% if step != 'code' %}
+<form method="post"><input type="hidden" name="csrf" value="{{ rcsrf }}"><input type="hidden" name="action" value="send">
+<p><b>Step 1.</b> Click the button. The code is written to the panel's log on the NAS{% if alerts %}, and sent to your phone/email (Alerts){% endif %}.</p>
+<p><button>Get a reset code</button></p></form>
+<p class="small"><a href="{{ url_for('reset', step='code') }}">I already have a code →</a></p>
+{% else %}
+<div class="small"><b>Where's the code?</b>{% if alerts %} Check your phone/email, or:{% endif %}
+<ol><li>Log in to your NAS in a new browser tab and open <b>Docker</b>.</li>
+<li>Click <b>Container</b> on the left, then click the name <b>nas-panel</b>.</li>
+<li>Click the <b>Log</b> tab. Look for <b>PASSWORD RESET CODE</b> near the bottom - it's 8 letters/numbers.</li></ol></div>
+<form method="post"><input type="hidden" name="csrf" value="{{ rcsrf }}"><input type="hidden" name="action" value="reset">
+<label>Reset code (works for 30 minutes)</label><input name="code" autocomplete="off" required>
+<label>New password (8+ characters)</label><input type="password" name="pw" autocomplete="new-password" required>
+<label>Repeat new password</label><input type="password" name="pw2" autocomplete="new-password" required>
+<p><button>Set new password</button></p></form>
+<p class="small"><a href="{{ url_for('reset') }}">← Get a new code</a></p>
+{% endif %}
+<p class="small"><a href="{{ url_for('login') }}">Back to log in</a></p></div></div>{% endblock %}

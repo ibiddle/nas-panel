@@ -2,4 +2,4 @@
 <h1><img src="{{ url_for('static', filename='icon.svg') }}" width="26" alt="" style="vertical-align:-5px"> NAS Panel</h1><p class="sub">Log in to continue.</p>{% include "_flash.html" %}
 {% if locked %}<div class="flash err">Locked after too many wrong attempts. Try again in {{ locked // 60 + 1 }} minute(s).</div>{% endif %}
 <form method="post"><label>Password</label><input type="password" name="pw" autocomplete="current-password" autofocus required>
-<p><button>Log in</button></p></form><p class="mute small">5 wrong attempts within 10 minutes locks the panel for 10 minutes.</p></div></div>{% endblock %}
+<p><button>Log in</button></p></form><p class="small"><a href="{{ url_for('reset') }}">Forgot password?</a></p><p class="mute small">5 wrong attempts within 10 minutes locks the panel for 10 minutes.</p></div></div>{% endblock %}

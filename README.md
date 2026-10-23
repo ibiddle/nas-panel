@@ -64,8 +64,7 @@ The version number and when it was last updated are shown at the bottom of the m
 For each connected share the panel writes `<app>/shares/<name>.yaml` (a compose override adding a read-only CIFS volume) and adds the login to `<app>/.env`, then runs `docker compose up -d` for that app. `COMPOSE_FILE` in `.env` is updated so a manual `docker compose up -d` keeps the share too.
 
 ## Forgotten password
-    docker exec nas-panel rm /data/auth.json && docker restart nas-panel
-    docker logs nas-panel | grep 'SETUP CODE'
+Click **Forgot password?** on the log-in page, then **Get a reset code**. The code appears in the container log (Docker → Container → nas-panel → Log, or `docker logs nas-panel | grep 'RESET CODE'`) and is also sent to your Alerts if set up. It works for 30 minutes; wrong codes count towards the lockout.
 
 ## Adding your own pages
 Each page is a file in `app/tools/` exposing a Flask Blueprint `bp` and a `TOOL` dict; list it in `TOOL_MODULES` in `app/app.py` and rebuild.
