@@ -491,11 +491,25 @@ services:
 
   <section class="after" id="forgot">
     <h2>I forgot my password</h2>
+    <h3>1. Ask for a reset code</h3>
     <ol class="steps">
       <li>On the panel's log-in page, click <span class="ui">Forgot password?</span></li>
-      <li>Click <span class="ui">Get a reset code</span>.</li>
-      <li>Find the code: in a new browser tab log in to your NAS, open <span class="ui">Docker</span> → <span class="ui">Container</span>, click the name <b>nas-panel</b>, then the <span class="ui">Log</span> tab. Look for <b>PASSWORD RESET CODE</b> near the bottom. (If you set up <a href="#alerts">Alerts</a>, the code is also sent to your phone or email.)</li>
-      <li>Go back to the panel tab, type the code and your new password twice, and click <span class="ui">Set new password</span>. The code works for 30 minutes. Your shares and settings are kept.</li>
+      <li>Click <span class="ui">Get a reset code</span>. Leave this tab open.</li>
+    </ol>
+    <h3>2. Find the code on your NAS</h3>
+    <ol class="steps">
+      <li>Open a new browser tab, go to your NAS's address and log in with your normal NAS username and password.</li>
+      <li>Double-click <span class="ui">Docker</span> on the NAS desktop.</li>
+      <li>Click <span class="ui">Container</span> in the menu on the left.</li>
+      <li>Click the name <b>nas-panel</b> (not nas-panel-updater).</li>
+      <li>Click the <span class="ui">Log</span> tab at the top of the window that opens.</li>
+      <li>Scroll to the very bottom and look for a line like <code>NAS PANEL PASSWORD RESET CODE:&nbsp;&nbsp;A1B2C3D4</code>. The code is the 8 letters and numbers after the colon. If you clicked the button more than once, use the bottom-most code.</li>
+    </ol>
+    <p>If you set up <a href="#alerts">Alerts</a>, the code is also sent to your phone or email, so you can skip part 2.</p>
+    <h3>3. Set your new password</h3>
+    <ol class="steps">
+      <li>Go back to the panel tab. Type the code, then your new password twice.</li>
+      <li>Click <span class="ui">Set new password</span>. The code works for 30 minutes and only once. Your shares and settings are kept.</li>
     </ol>
     <p class="small">Why no email reset? The code proves you can get into your NAS itself, so nobody else on your network can reset it.</p>
   </section>

@@ -8,9 +8,13 @@
 <p class="small"><a href="{{ url_for('reset', step='code') }}">I already have a code →</a></p>
 {% else %}
 <div class="small"><b>Where's the code?</b>{% if alerts %} Check your phone/email, or:{% endif %}
-<ol><li>Log in to your NAS in a new browser tab and open <b>Docker</b>.</li>
-<li>Click <b>Container</b> on the left, then click the name <b>nas-panel</b>.</li>
-<li>Click the <b>Log</b> tab. Look for <b>PASSWORD RESET CODE</b> near the bottom - it's 8 letters/numbers.</li></ol></div>
+<ol><li>Open a new browser tab, go to your NAS's address and log in with your normal NAS username and password.</li>
+<li>Double-click <b>Docker</b> on the NAS desktop.</li>
+<li>Click <b>Container</b> in the menu on the left.</li>
+<li>Click the name <b>nas-panel</b> (not nas-panel-updater).</li>
+<li>Click the <b>Log</b> tab at the top of the window that opens.</li>
+<li>Scroll to the very bottom and find the line <code>NAS PANEL PASSWORD RESET CODE:&nbsp;&nbsp;A1B2C3D4</code>. The code is the 8 letters/numbers after the colon. If there's more than one, use the bottom one.</li>
+<li>Come back to this tab and type it below.</li></ol></div>
 <form method="post"><input type="hidden" name="csrf" value="{{ rcsrf }}"><input type="hidden" name="action" value="reset">
 <label>Reset code (works for 30 minutes)</label><input name="code" autocomplete="off" required>
 <label>New password (8+ characters)</label><input type="password" name="pw" autocomplete="new-password" required>
